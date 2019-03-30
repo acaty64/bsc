@@ -1,12 +1,12 @@
 <template>
   <div class="row">
-    <div class="col-md-10 col-md-offset-1">
-      <div class="panel panel-default">
+    <div class="col-md-12 box">
+      <div class="panel-body">
         <div class="panel-heading">Agregar/Modificar avance del mes de <b>{{ wmes[now-1] }}</b> 
         <span v-if="viewBtnSave">
           <button class="btn btn-primary btn-sm" @click="clickSave">Grabar</button>
-          <button class="btn btn-success btn-sm" @click="clickEscape">Descartar</button>
         </span> 
+        <button class="btn btn-success btn-sm" @click="clickEscape">Descartar</button>
         </div>
         <div class="panel-body">
           <div class="row">
@@ -58,7 +58,7 @@
         if(this.valInput != parseFloat(this.avanceMes.ejecutado)){
           return true;
         }
-        if(this.nameFile != this.avanceMes.warchivo){
+        if(this.nameFile != this.avanceMes.warchivo && this.nameFile != ''){
           return true;
         }
         return false;
@@ -90,7 +90,8 @@
           this.viewReplaceFile = true;
         }else{
           this.labelBtnReplaceFile = "Reemplazar";
-          this.viewReplaceFile = false;          
+          this.viewReplaceFile = false;
+          this.nameFile = '';
         }
       },
       clickSave: function(){
@@ -99,11 +100,13 @@ console.log('TODO AvanceBoard.vue methods: clickSave()');
       },
       clickEscape: function(){
 // console.log('TODO AvanceBoard.vue methods: clickEscape()');
-        this.viewInput = false;
         this.viewReplaceFile = false;
         this.labelBtnReplaceFile = "Reemplazar";
+        this.viewInput = false;
         
         this.getData();
+        this.$store.dispatch('ChangeEjecutado', this.avanceMes.ejecutado);
+        this.$store.commit('swButton', 'modify');
       },
       getData: function(){
         this.valInput = this.avanceMes.ejecutado;

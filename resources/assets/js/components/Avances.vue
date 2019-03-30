@@ -3,41 +3,41 @@
     <div class="row">
       <div class="col-md-8 col-md-offset-2">    
         <div class="panel panel-default">
-          <div class="panel-heading">{{ iniciativa.winiciativa }}</div>
+          <div class="panel-heading">INICIATIVA: {{ iniciativa.winiciativa }}</div>
           
           <div class="container">
-          <div class="col-md7">
-          <div class="panel-body">
-              <div>Programado en el mes: {{ mes.programado }} {{ iniciativa.indicador }}</div>
-              <div>
+            <div class="col-md-7 box">
+              <div class="panel-body">
+                <div>Programado en el mes: {{ mes.programado.toFixed(2) }} {{ iniciativa.indicador }}</div>
                 <div>
-                  Ejecutado en el mes: {{ mes.ejecutado }} {{ iniciativa.indicador }} 
-                </div>
-                <br>
-                <span v-if="swButton == 'add'">
-                  <button class="btn btn-success btn-sm" @click="clickModify">Agregar</button>
-                </span>
-                <span v-else>
-                  <span v-if="swButton == 'modify'">                
-                    <div>
-                      Evidencia: {{ avanceMes.warchivo }}
-                    </div>
-                    <button class="btn btn-primary btn-sm" @click="clickModify">Modificar</button>
-                    <button class="btn btn-danger btn-sm">Eliminar</button>
+                  <div>
+                    Ejecutado en el mes: {{ mes.ejecutado }} {{ iniciativa.indicador }} 
+                  </div>
+                  <span v-if="swButton == 'add'">
+                    <button class="btn btn-success btn-sm" @click="clickModify">Agregar</button>
                   </span>
+                  <span v-else>
+                    <span v-if="swButton == 'modify'">
+                      <div>
+                        Evidencia: {{ avanceMes.warchivo }}
+                      </div>
+                      <br>               
+                      <button class="btn btn-primary btn-sm" @click="clickModify">Modificar</button>
+                      <button class="btn btn-danger btn-sm">Eliminar</button>
+                    </span>
+                  </span>
+                </div>
+                <span v-if="swButton == 'viewModify'">
+                  <avance_board></avance_board>
                 </span>
-              </div>
-              <span v-if="swButton == 'viewModify'">
-                <avance_board></avance_board>
-              </span>
 
-          </div>
-          </div>
+              </div>
+            </div>
           </div>
           
           <div class="panel-body">
             <drawComponent></drawComponent>
-            <br>
+
             <div class="grid">
                 <div class="grid-item g1">INICIATIVA: {{ iniciativa.winiciativa }}</div>
                 <div class="grid-item g2">Inductor: {{ iniciativa.inductor }}</div>
@@ -47,7 +47,6 @@
                     <semaforoComponent :color="colorIniciativa"></semaforoComponent>
                 </div>
             </div>
-            <br>
             <div class="grid">
                 <div class="grid-item g1">OBJETIVO ESTRATÉGICO: {{ objetivo.wobjetivo }}</div>
                 <div class="grid-item g2">Programado: {{ programado.objetivo }}%</div>
@@ -56,7 +55,6 @@
                     <semaforoComponent :color="colorObjetivo"></semaforoComponent>
                 </div>
             </div>
-            <br>
             <div class="grid">
                 <div class="grid-item g1">PERSPECTIVA: {{ perspectiva.wperspectiva }}</div>
                 <div class="grid-item g2">Programado: {{ programado.perspectiva }}%</div>
@@ -65,7 +63,6 @@
                     <semaforoComponent :color="colorPerspectiva"></semaforoComponent>
                 </div>
             </div>
-            <br>
           </div>
         </div>
       </div>
@@ -110,9 +107,7 @@
           ]),
       colorIniciativa() { return this.$store.getters.colorIniciativa},
       colorObjetivo() { return this.$store.getters.colorObjetivo},
-      colorPerspectiva() { return this.$store.getters.colorPerspectiva},
-      // ejecutadoIniciativa() { return this.$store.getters.ejecutadoIniciativa},
-      
+      colorPerspectiva() { return this.$store.getters.colorPerspectiva},      
     },
     data() {
       return {
@@ -136,6 +131,11 @@
   };
 </script>
 <style>
+  .box {
+    border: 1px solid #000;
+    border-radius: 25px;
+  }
+
   .grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -146,6 +146,9 @@
               "g3 g5"
               "g4 g5";
     border: 1px solid #000;
+    border-radius: 25px;
+    padding: 10px;
+    margin-bottom: 5px;
   }
 
   .grid-vertical {
