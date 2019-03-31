@@ -83,6 +83,7 @@ export const store = new Vuex.Store({
     },
   },
   actions: {
+    
     NewAvance: (context, value) =>{
       var newValue = context.state.avanceMes;
       newValue.ejecutado = value;

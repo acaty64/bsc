@@ -46967,6 +46967,7 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
     }
   },
   actions: {
+
     NewAvance: function NewAvance(context, value) {
       var newValue = context.state.avanceMes;
       newValue.ejecutado = value;
