@@ -1,25 +1,37 @@
 <template>
   <div class="row">
-    <div class="col-md-10 col-md-offset-1">
-      <div class="panel panel-default">
-        <div class="panel-heading">Agregar avance del mes</div>
+    <div class="col-md-12 box">
+      <div class="panel-body">
+        <div class="panel-heading">Agregar/Modificar avance del mes de <b>{{ wmes[now-1] }}</b> 
+        <span v-if="viewBtnSave">
+          <button class="btn btn-primary btn-sm" @click="clickSave">Grabar</button>
+        </span> 
+        <button class="btn btn-success btn-sm" @click="clickEscape">Descartar</button>
+        </div>
         <div class="panel-body">
           <div class="row">
-            Ingrese avance del mes: <input type="text" :value="valInput"> {{ iniciativa.indicador }}
+            Ingrese avance del mes: 
+            <input type="text" v-model="valInput" > {{ iniciativa.indicador }}
           </div>
+          <br>
           <div v-if="viewInput">
             <div class="row">
-              Seleccione archivo pdf de evidencias: <input type="file" @change="processFile($event)">
+              <label for="inputFile">Seleccione archivo pdf de evidencias:</label> 
+              <input id="inputFile" type="file" @change="processFile($event)" accept="application/pdf">
             </div> 
           </div>
           <div v-else>
             <div class="row">
-              Archivo: {{ avance.warchivo }} <button class="btn btn-danger btn-sm">Reemplazar</button>
+              Archivo: 
+              <b>{{ avanceMes.warchivo }}</b>
+              <button class="btn btn-danger btn-sm" @click="btnViewReplaceFile">{{ labelBtnReplaceFile }}</button>
+              <span v-if="viewReplaceFile">
+                <div>
+                  <label for="replaceFile">Seleccione archivo pdf de reemplazo:</label> 
+                  <input id="replaceFile" type="file" @change="processFile($event)" accept="application/pdf">                
+                </div>
+              </span>
             </div>
-          </div>
-          <div v-if="save">
-            <button class="btn btn-primary btn-sm">Grabar</button>
-            <button class="btn btn-success btn-sm">Descartar</button>
           </div>
         </div>
       </div>
@@ -27,58 +39,106 @@
   </div>
 </template>
 <script>
+  import {mapState} from 'vuex';
   export default {
-    mounted() {
+    created() {
       console.log('AvanceBoard Component mounted.');
       this.getData();
     },
-    // created() {
-    //   this.valInput = this.avance.ejecutado;
-    //   console.log('this.avance: ', this.avance);
-    //   console.log('this.valInput: ', this.valInput);
-    // },
-    props: ['mes', 'user_id','iniciativa', 'avance'],
+
+    computed: {
+      ...mapState([
+          'wmes',
+          'now',
+          'user_id',
+          'iniciativa',
+          'avanceMes',
+          'swButton'
+      ]),
+      viewBtnSave() {
+        if(this.valInput != this.avanceMes.ejecutado){
+          return true;
+        }
+        if(this.nameFile != this.avanceMes.warchivo){
+          return true;
+        }
+        return false;
+      },
+
+      labelBtnReplaceFile(){
+        return (this.avanceMes.id == 'new') ? "Seleccionar" : "Reemplazar" ;
+      },
+    },
+
     data() {
       return {
         viewInput: false,
-        save: false,
         valInput: 0,
+        viewReplaceFile: false,
+        nameFile: '',
+        filePDF: [],
       }; 
     },
+
     watch: {
-      valInput() {
-console.log('watch.valInput: ', this.valInput);
-        this.$emit('valUpdated', this.valInput);
+      valInput: function(newValue, oldValue) {
+        this.$store.dispatch('ChangeEjecutado', newValue);
       },
-      avance(){
-        this.getData()
-      },
-    },    
+    },   
+
     methods: {
-      getData: function () {
-        if(!this.isEmpty(this.avance)){            
-          this.viewInput = (this.avance.archivo.length>0) ? false : true;
-      console.log('this.avance: ', this.avance);
-      console.log('this.avance.ejecutado: ', this.avance.ejecutado);
-          this.valInput = this.avance.ejecutado;
-      console.log('this.valInput: ', this.valInput);
+      btnViewReplaceFile: function() {
+        this.nameFile = this.avanceMes.warchivo;
+        if(this.labelBtnReplaceFile == "Reemplazar" || this.labelBtnReplaceFile == "Seleccionar"){
+          this.labelBtnReplaceFile = "Descartar";
+          this.viewReplaceFile = true;
+        }else{
+          this.labelBtnReplaceFile = "Reemplazar";
+          this.viewReplaceFile = false;
         }
       },
-//       processFile(event): {
-//         this.avance.archivo = event.target.files[0];
-// console.log(this.avance.archivo);
-//       },
-     isEmpty: function (obj) {
+      clickSave: function(){
+console.log('TODO AvanceBoard.vue methods: clickSave()');
+        var request = this.avanceMes;
+        request.warchivo = this.nameFile;
+console.log('TODO AvanceBoard.vue methods: request.warchivo: ', request.warchivo);
+        request.filePDF = this.filePDF;
+        request.ejecutado = this.valInput;
+        this.$store.dispatch('SaveData', request);
+      },
+      clickEscape: function(){
+// console.log('TODO AvanceBoard.vue methods: clickEscape()');
+        this.viewReplaceFile = false;
+        this.labelBtnReplaceFile = "Reemplazar";
+        this.viewInput = false;
+        
+        this.getData();
+        this.$store.dispatch('ChangeEjecutado', this.avanceMes.ejecutado);
+        this.$store.commit('swButton', 'modify');
+      },
+      getData: function(){
+        this.valInput = this.avanceMes.ejecutado;
+      },
+      processFile: function(event) {
+        this.nameFile = event.target.files[0].name;
+        this.filePDF = event.target.files[0];
+        this.archivo = '';
+      },
+      isEmpty: function (obj) {
         for (var key in obj) {
           if(obj.hasOwnProperty(key))
             return false;
         }
         return true;
-     },
+      },
     },
 	};	
 
 // Consistencia:
 // 
+//
+// Logica:
+//  Recibe avanceMes
+//  Modifica avanceMes
 
 </script>

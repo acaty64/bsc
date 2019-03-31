@@ -45480,7 +45480,7 @@ exports = module.exports = __webpack_require__(44)(false);
 
 
 // module
-exports.push([module.i, "\n.box {\n  border: 1px solid #000;\n  border-radius: 25px;\n}\n.grid {\n  display: grid;\n  grid-template-columns: 1fr 1fr;\n  grid-auto-rows: minmax(30px, auto);\n  grid-template-areas: \n            \"g1 g5\"\n            \"g2 g5\"\n            \"g3 g5\"\n            \"g4 g5\";\n  border: 1px solid #000;\n  border-radius: 25px;\n  padding: 10px;\n  margin-bottom: 5px;\n}\n.grid-vertical {\n  grid-template-columns: 50%;\n}\n.g1 {\n  grid-area: g1;\n}\n.g2 {\n  grid-area: g2\n}\n.g3 {\n  grid-area: g3\n}\n.g4 {\n  grid-area: g4;\n}\n.g5 {\n  grid-area: g5;\n}\n\n", ""]);
+exports.push([module.i, "\n.panel-heading {\n  text-align: center;\n  font-size: 120%;\n}\n.box {\n  border: 1px solid #000;\n  border-radius: 25px;\n}\n.grid {\n  display: grid;\n  grid-template-columns: 1fr 1fr;\n  grid-auto-rows: minmax(30px, auto);\n  grid-template-areas: \n            \"g1 g5\"\n            \"g2 g5\"\n            \"g3 g5\"\n            \"g4 g5\";\n  border: 1px solid #000;\n  border-radius: 25px;\n  padding: 20px;\n  margin-bottom: 5px;\n}\n.grid-vertical {\n  grid-template-columns: 50%;\n}\n.g1 {\n  grid-area: g1;\n}\n.g2 {\n  grid-area: g2\n}\n.g3 {\n  grid-area: g3\n}\n.g4 {\n  grid-area: g4;\n}\n.g5 {\n  grid-area: g5;\n}\n", ""]);
 
 // exports
 
@@ -45912,11 +45912,6 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
-//
-//
-//
-//
-//
 
 
 
@@ -45931,7 +45926,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
   },
 
   props: ['user_id', 'iniciativa_id'],
-  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_3_vuex__["b" /* mapState */])(['avances', 'programacion', 'iniciativa', 'objetivo', 'perspectiva', 'programado', 'ejecutado', 'avanceMes', 'linea', 'circulo1', 'circulo2', 'text1', 'text2', 'ini', 'largo', 'radio', 'mes', 'now', 'swButton']), {
+  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_3_vuex__["b" /* mapState */])(['avances', 'programacion', 'iniciativa', 'objetivo', 'perspectiva', 'programado', 'ejecutado', 'avanceMes', 'linea', 'circulo1', 'circulo2', 'text1', 'text2', 'ini', 'largo', 'radio', 'mes', 'now', 'swButton', 'add']), {
     colorIniciativa: function colorIniciativa() {
       return this.$store.getters.colorIniciativa;
     },
@@ -46199,7 +46194,6 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -46209,15 +46203,23 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
   },
 
 
-  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapState */])(['wmes', 'now', 'user_id', 'iniciativa', 'avanceMes']), {
-    viewBtnSave: function viewBtnSave() {
-      if (this.valInput != parseFloat(this.avanceMes.ejecutado)) {
+  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapState */])(['wmes', 'now', 'user_id', 'iniciativa', 'avanceMes', 'swButton', 'add']), {
+    viewBtnBoard2: function viewBtnBoard2() {
+      if (!this.add && !this.viewBoard2) {
         return true;
       }
-      if (this.nameFile != this.avanceMes.warchivo && this.nameFile != '') {
+    },
+    viewBtnSave: function viewBtnSave() {
+      if (this.valInput != this.avanceMes.ejecutado) {
+        return true;
+      }
+      if (this.nameFile != this.avanceMes.warchivo) {
         return true;
       }
       return false;
+    },
+    labelTitle: function labelTitle() {
+      return this.avanceMes.id == 'new' ? "Agregar avance del mes de " + this.wmes[this.now - 1] : "Modificar avance del mes de " + this.wmes[this.now - 1];
     }
   }),
 
@@ -46226,9 +46228,9 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       viewInput: false,
       valInput: 0,
       viewReplaceFile: false,
-      labelBtnReplaceFile: "Reemplazar",
       nameFile: '',
-      filePDF: []
+      filePDF: [],
+      viewBoard2: false
     };
   },
 
@@ -46240,36 +46242,59 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
   },
 
   methods: {
-    btnViewReplaceFile: function btnViewReplaceFile() {
-      this.nameFile = this.avanceMes.warchivo;
-      if (this.labelBtnReplaceFile == "Reemplazar") {
-        this.labelBtnReplaceFile = "Descartar";
-        this.viewReplaceFile = true;
-      } else {
-        this.labelBtnReplaceFile = "Reemplazar";
-        this.viewReplaceFile = false;
-        this.nameFile = '';
-      }
+    clickViewBoard2: function clickViewBoard2() {
+      this.viewBoard2 = true;
     },
-    clickSave: function clickSave() {
-      console.log('TODO AvanceBoard.vue methods: clickSave()');
-    },
-    clickEscape: function clickEscape() {
-      // console.log('TODO AvanceBoard.vue methods: clickEscape()');
-      this.viewReplaceFile = false;
-      this.labelBtnReplaceFile = "Reemplazar";
-      this.viewInput = false;
-
+    restoreBoard1: function restoreBoard1() {
+      console.log('TODO AvanceBoard.vue methods: restoreBoard1()');
       this.getData();
       this.$store.dispatch('ChangeEjecutado', this.avanceMes.ejecutado);
+      this.restoreBoard2();
       this.$store.commit('swButton', 'modify');
     },
+    restoreBoard2: function restoreBoard2() {
+      console.log('TODO AvanceBoard.vue methods: restoreBoard2()');
+      this.viewBoard2 = false;
+    },
+    // btnViewReplaceFile: function() {
+    // this.nameFile = this.avanceMes.warchivo;
+    // if(this.labelBtnReplaceFile == "Reemplazar" || this.labelBtnReplaceFile == "Seleccionar"){
+    //   this.labelBtnReplaceFile = "Descartar";
+    //   this.viewReplaceFile = true;
+    // }else{
+    //   this.labelBtnReplaceFile = "Reemplazar";
+    //   this.viewReplaceFile = false;
+    // }
+    // },
+
+    clickSave: function clickSave() {
+      console.log('TODO AvanceBoard.vue methods: clickSave()');
+      var request = this.avanceMes;
+      request.warchivo = this.nameFile;
+      console.log('TODO AvanceBoard.vue methods: request.warchivo: ', request.warchivo);
+      request.filePDF = this.filePDF;
+      request.ejecutado = this.valInput;
+      this.$store.dispatch('SaveData', request);
+    },
+
+    //       clickEscape: function(){
+    // console.log('TODO AvanceBoard.vue methods: clickEscape()');
+    // this.viewReplaceFile = false;
+    // this.labelBtnReplaceFile = "Reemplazar";
+    // this.viewInput = false;
+
+    // this.getData();
+    // this.$store.dispatch('ChangeEjecutado', this.avanceMes.ejecutado);
+    // this.$store.commit('swButton', 'modify');
+    // },
     getData: function getData() {
       this.valInput = this.avanceMes.ejecutado;
+      this.nameFile = this.avanceMes.warchivo;
     },
     processFile: function processFile(event) {
       this.nameFile = event.target.files[0].name;
       this.filePDF = event.target.files[0];
+      this.archivo = '';
     },
     isEmpty: function isEmpty(obj) {
       for (var key in obj) {
@@ -46279,13 +46304,6 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     }
   }
 });
-
-// Consistencia:
-// 
-//
-// Logica:
-//  Recibe avanceMes
-//  Modifica avanceMes
 
 /***/ }),
 /* 53 */
@@ -46299,12 +46317,10 @@ var render = function() {
     _c("div", { staticClass: "col-md-12 box" }, [
       _c("div", { staticClass: "panel-body" }, [
         _c("div", { staticClass: "panel-heading" }, [
-          _vm._v("Agregar/Modificar avance del mes de "),
-          _c("b", [_vm._v(_vm._s(_vm.wmes[_vm.now - 1]))]),
-          _vm._v(" "),
-          _vm.viewBtnSave
-            ? _c("span", [
-                _c(
+          _c("div", [
+            _vm._v(_vm._s(_vm.labelTitle) + "\n          "),
+            _vm.viewBtnSave
+              ? _c(
                   "button",
                   {
                     staticClass: "btn btn-primary btn-sm",
@@ -46312,21 +46328,21 @@ var render = function() {
                   },
                   [_vm._v("Grabar")]
                 )
-              ])
-            : _vm._e(),
-          _vm._v(" "),
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-success btn-sm",
-              on: { click: _vm.clickEscape }
-            },
-            [_vm._v("Descartar")]
-          )
+              : _vm._e(),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-primary btn-sm",
+                on: { click: _vm.restoreBoard1 }
+              },
+              [_vm._v("Descartar")]
+            )
+          ])
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "panel-body" }, [
-          _c("div", { staticClass: "row" }, [
+          _c("div", [
             _vm._v("\n          Ingrese avance del mes: \n          "),
             _c("input", {
               directives: [
@@ -46351,10 +46367,10 @@ var render = function() {
             _vm._v(" " + _vm._s(_vm.iniciativa.indicador) + "\n        ")
           ]),
           _vm._v(" "),
-          _c("br"),
-          _vm._v(" "),
-          _vm.viewInput
-            ? _c("div", [
+          _vm.add
+            ? _c("span", [
+                _c("br"),
+                _vm._v(" "),
                 _c("div", { staticClass: "row" }, [
                   _c("label", { attrs: { for: "inputFile" } }, [
                     _vm._v("Seleccione archivo pdf de evidencias:")
@@ -46374,44 +46390,53 @@ var render = function() {
                   })
                 ])
               ])
-            : _c("div", [
-                _c("div", { staticClass: "row" }, [
-                  _vm._v("\n            Archivo: \n            "),
-                  _c("b", [_vm._v(_vm._s(_vm.avanceMes.warchivo))]),
+            : _c("span", [
+                _vm._v("\n            Archivo: \n            "),
+                _c("b", [_vm._v(_vm._s(_vm.avanceMes.warchivo))]),
+                _vm._v(" "),
+                _vm.viewBtnBoard2
+                  ? _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-primary btn-sm",
+                        on: { click: _vm.clickViewBoard2 }
+                      },
+                      [_vm._v("Modificar Archivo")]
+                    )
+                  : _vm._e()
+              ]),
+          _vm._v(" "),
+          _vm.viewBoard2
+            ? _c("span", [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary btn-sm",
+                    on: { click: _vm.restoreBoard2 }
+                  },
+                  [_vm._v("Descartar")]
+                ),
+                _vm._v(" "),
+                _c("div", [
+                  _c("label", { attrs: { for: "replaceFile" } }, [
+                    _vm._v("Seleccione archivo pdf de reemplazo:")
+                  ]),
                   _vm._v(" "),
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-danger btn-sm",
-                      on: { click: _vm.btnViewReplaceFile }
+                  _c("input", {
+                    attrs: {
+                      id: "replaceFile",
+                      type: "file",
+                      accept: "application/pdf"
                     },
-                    [_vm._v(_vm._s(_vm.labelBtnReplaceFile))]
-                  ),
-                  _vm._v(" "),
-                  _vm.viewReplaceFile
-                    ? _c("span", [
-                        _c("div", [
-                          _c("label", { attrs: { for: "replaceFile" } }, [
-                            _vm._v("Seleccione archivo pdf de reemplazo:")
-                          ]),
-                          _vm._v(" "),
-                          _c("input", {
-                            attrs: {
-                              id: "replaceFile",
-                              type: "file",
-                              accept: "application/pdf"
-                            },
-                            on: {
-                              change: function($event) {
-                                return _vm.processFile($event)
-                              }
-                            }
-                          })
-                        ])
-                      ])
-                    : _vm._e()
+                    on: {
+                      change: function($event) {
+                        return _vm.processFile($event)
+                      }
+                    }
+                  })
                 ])
               ])
+            : _vm._e()
         ])
       ])
     ])
@@ -46694,58 +46719,48 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", [
-                  _c("div", [
-                    _vm._v(
-                      "\n                  Ejecutado en el mes: " +
-                        _vm._s(_vm.mes.ejecutado) +
-                        " " +
-                        _vm._s(_vm.iniciativa.indicador) +
-                        " \n                "
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _vm.swButton == "add"
-                    ? _c("span", [
-                        _c(
-                          "button",
-                          {
-                            staticClass: "btn btn-success btn-sm",
-                            on: { click: _vm.clickModify }
-                          },
-                          [_vm._v("Agregar")]
-                        )
-                      ])
-                    : _c("span", [
-                        _vm.swButton == "modify"
-                          ? _c("span", [
-                              _c("div", [
-                                _vm._v(
-                                  "\n                      Evidencia: " +
-                                    _vm._s(_vm.avanceMes.warchivo) +
-                                    "\n                    "
-                                )
-                              ]),
-                              _vm._v(" "),
-                              _c("br"),
-                              _vm._v(" "),
-                              _c(
-                                "button",
-                                {
-                                  staticClass: "btn btn-primary btn-sm",
-                                  on: { click: _vm.clickModify }
-                                },
-                                [_vm._v("Modificar")]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "button",
-                                { staticClass: "btn btn-danger btn-sm" },
-                                [_vm._v("Eliminar")]
-                              )
-                            ])
-                          : _vm._e()
-                      ])
+                  _vm._v(
+                    "Ejecutado en el mes: " +
+                      _vm._s(_vm.mes.ejecutado) +
+                      " " +
+                      _vm._s(_vm.iniciativa.indicador) +
+                      " \n              "
+                  )
                 ]),
+                _vm._v(" "),
+                _vm.add && _vm.swButton == "add"
+                  ? _c("span", [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-success btn-sm",
+                          on: { click: _vm.clickModify }
+                        },
+                        [_vm._v("Agregar")]
+                      )
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.swButton == "modify"
+                  ? _c("span", [
+                      _c("div", [
+                        _vm._v(
+                          "\n                  Evidencia: " +
+                            _vm._s(_vm.avanceMes.warchivo) +
+                            "\n                "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-primary btn-sm",
+                          on: { click: _vm.clickModify }
+                        },
+                        [_vm._v("Modificar")]
+                      )
+                    ])
+                  : _vm._e(),
                 _vm._v(" "),
                 _vm.swButton == "viewModify"
                   ? _c("span", [_c("avance_board")], 1)
@@ -46877,6 +46892,8 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex
 var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
 
   state: {
+    add: true,
+    swButton: 'add',
     URLdomain: window.location.host,
     protocol: window.location.protocol,
     iniciativa_id: 0,
@@ -46896,12 +46913,11 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
       programado: 0
     },
     now: new Date().getMonth() + 1,
-    swButton: 'add',
     avanceDefault: {
       id: 'new',
       user_id: this.user_id,
       iniciativa_id: this.iniciativa_id,
-      ejecutado: "",
+      ejecutado: 0,
       mes: new Date().getMonth() + 1,
       warchivo: "",
       archivo: ""
@@ -46947,6 +46963,9 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
     },
     mes: function mes(state, value) {
       state.mes = value;
+    },
+    add: function add(state, value) {
+      state.add = value;
     }
   },
   getters: {
@@ -46967,7 +46986,9 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
     }
   },
   actions: {
-
+    SaveData: function SaveData(context, request) {
+      console.log('SaveData: ', request);
+    },
     NewAvance: function NewAvance(context, value) {
       var newValue = context.state.avanceMes;
       newValue.ejecutado = value;
@@ -47029,6 +47050,7 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
         if (!isEmpty(response.data.data.avanceMes)) {
           context.commit('avanceMes', context.state.avanceMes);
           context.commit('swButton', 'modify');
+          context.commit('add', false);
         }
         context.dispatch('GetMes');
       }).catch(function (error) {

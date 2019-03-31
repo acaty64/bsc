@@ -4,12 +4,14 @@ import Vuex from 'vuex';
 Vue.use(Vuex);
 
 export const store = new Vuex.Store({
-	
-	state: {
+  
+  state: {
+    add: true,
+    swButton: 'add',
     URLdomain: window.location.host,
-    protocol: window.location.protocol,		
-		iniciativa_id: 0,
-		user_id: 0,
+    protocol: window.location.protocol,   
+    iniciativa_id: 0,
+    user_id: 0,
     avances: [],
     avanceMes: {},
     programacion: [],
@@ -25,12 +27,11 @@ export const store = new Vuex.Store({
         programado: 0
       },
     now: new Date().getMonth() + 1,
-    swButton: 'add',
 		avanceDefault: {
         id: 'new',
 				user_id: this.user_id,
 				iniciativa_id: this.iniciativa_id,
-				ejecutado: "",
+				ejecutado: 0,
 				mes: new Date().getMonth() + 1,
 				warchivo: "",
 				archivo: ""
@@ -63,7 +64,8 @@ export const store = new Vuex.Store({
 		ejecutado(state, value){ state.ejecutado = value; },
 		avanceMes(state, value){ state.avanceMes = value; },
 		swButton(state, value){ state.swButton = value; },
-		mes(state, value){ state.mes = value; },
+    mes(state, value){ state.mes = value; },
+		add(state, value){ state.add = value; },
 	},
 	getters: {
     colorIniciativa (state) {
@@ -83,7 +85,9 @@ export const store = new Vuex.Store({
     },
   },
   actions: {
-    
+    SaveData: (context, request) => {
+console.log('SaveData: ', request);      
+    },
     NewAvance: (context, value) =>{
       var newValue = context.state.avanceMes;
       newValue.ejecutado = value;
@@ -148,6 +152,7 @@ export const store = new Vuex.Store({
         if(!isEmpty(response.data.data.avanceMes)){
           context.commit('avanceMes', context.state.avanceMes);
           context.commit('swButton', 'modify');
+          context.commit('add', false);
         }
         context.dispatch('GetMes');
       }).catch(function (error) {

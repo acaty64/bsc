@@ -9,24 +9,19 @@
             <div class="col-md-7 box">
               <div class="panel-body">
                 <div>Programado en el mes: {{ mes.programado.toFixed(2) }} {{ iniciativa.indicador }}</div>
-                <div>
-                  <div>
-                    Ejecutado en el mes: {{ mes.ejecutado }} {{ iniciativa.indicador }} 
-                  </div>
-                  <span v-if="swButton == 'add'">
-                    <button class="btn btn-success btn-sm" @click="clickModify">Agregar</button>
-                  </span>
-                  <span v-else>
-                    <span v-if="swButton == 'modify'">
-                      <div>
-                        Evidencia: {{ avanceMes.warchivo }}
-                      </div>
-                      <br>               
-                      <button class="btn btn-primary btn-sm" @click="clickModify">Modificar</button>
-                      <button class="btn btn-danger btn-sm">Eliminar</button>
-                    </span>
-                  </span>
+
+                <div>Ejecutado en el mes: {{ mes.ejecutado }} {{ iniciativa.indicador }} 
                 </div>
+
+                <span v-if="add && swButton == 'add'">
+                  <button class="btn btn-success btn-sm" @click="clickModify">Agregar</button>
+                </span>
+                <span v-if="swButton == 'modify'">
+                  <div>
+                    Evidencia: {{ avanceMes.warchivo }}
+                  </div>           
+                  <button class="btn btn-primary btn-sm" @click="clickModify">Modificar</button>
+                </span>
                 <span v-if="swButton == 'viewModify'">
                   <avance_board></avance_board>
                 </span>
@@ -104,6 +99,7 @@
             'mes',
             'now',
             'swButton',
+            'add'
           ]),
       colorIniciativa() { return this.$store.getters.colorIniciativa},
       colorObjetivo() { return this.$store.getters.colorObjetivo},
@@ -131,11 +127,14 @@
   };
 </script>
 <style>
+  .panel-heading {
+    text-align: center;
+    font-size: 120%;
+  }
   .box {
     border: 1px solid #000;
     border-radius: 25px;
   }
-
   .grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -147,32 +146,25 @@
               "g4 g5";
     border: 1px solid #000;
     border-radius: 25px;
-    padding: 10px;
+    padding: 20px;
     margin-bottom: 5px;
   }
-
   .grid-vertical {
     grid-template-columns: 50%;
   }
-
   .g1 {
     grid-area: g1;
   }
-
   .g2 {
     grid-area: g2
   }
-
   .g3 {
     grid-area: g3
   }
-
   .g4 {
     grid-area: g4;
   }
-
   .g5 {
     grid-area: g5;
   }
-
 </style>
