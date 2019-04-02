@@ -28,9 +28,9 @@ export const store = new Vuex.Store({
       },
     now: new Date().getMonth() + 1,
 		avanceDefault: {
-        id: 'new',
-				user_id: this.user_id,
-				iniciativa_id: this.iniciativa_id,
+        id: 0,
+				user_id: 0,
+				iniciativa_id: 0,
 				ejecutado: 0,
 				mes: new Date().getMonth() + 1,
 				warchivo: "",
@@ -52,8 +52,14 @@ export const store = new Vuex.Store({
     ],
 	},
 	mutations: {
-		user_id(state, id){ state.user_id = id; },
-		iniciativa_id(state, id){ state.iniciativa_id = id; },
+		user_id(state, id){
+      state.user_id = id; 
+      state.avanceDefault.user_id = id;
+    },
+		iniciativa_id(state, id){ 
+      state.iniciativa_id = id;
+      state.avanceDefault.iniciativa_id = id; 
+    },
 		avances(state, value){ state.avances = value; },
 		programacion(state, value){ state.programacion = value; },
 		iniciativa(state, value){ state.iniciativa = value; },
@@ -65,7 +71,8 @@ export const store = new Vuex.Store({
 		avanceMes(state, value){ state.avanceMes = value; },
 		swButton(state, value){ state.swButton = value; },
     mes(state, value){ state.mes = value; },
-		add(state, value){ state.add = value; },
+    add(state, value){ state.add = value; },
+		archivo(state, value){ state.avanceMes.archivo = value; },
 	},
 	getters: {
     colorIniciativa (state) {
@@ -85,8 +92,29 @@ export const store = new Vuex.Store({
     },
   },
   actions: {
-    SaveData: (context, request) => {
-console.log('SaveData: ', request);      
+
+    SaveData: function (context, request) {
+      let data = new FormData();
+      data.append('filePDF', request.filePDF);
+      let url = context.state.protocol+'//'+context.state.URLdomain+'/api/avances/storeFile';
+      axios.post(url, data, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(response=>{
+        context.commit('archivo', response.data.archivo);
+        var request = context.state.avanceMes;
+        let url = context.state.protocol+'//'+context.state.URLdomain+'/api/avances/store';
+        axios.post(url, request).then(response=>{
+          context.dispatch('GetData', context.state.iniciativa_id);
+          return true;
+        }).catch(function(error){
+          console.log('SaveData 2 error: ', error);
+        });
+      }).catch(function (error) {
+        console.log('SaveData 1: ',error);
+      });    
+
     },
     NewAvance: (context, value) =>{
       var newValue = context.state.avanceMes;

@@ -7,12 +7,13 @@ use App\Http\Controllers\Controller;
 use App\Iniciativa;
 use App\Programacion;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class AvanceController extends Controller
 {
     public function getData(Request $request)
     {
-        // $avances = Avance::findOrFail($request->id);
         $iniciativa = Iniciativa::findOrFail($request->iniciativa_id);
         $iniciativas = $iniciativa->getIniciativasObjetivo();        
         $objetivo = $iniciativa->getObjetivo();
@@ -55,45 +56,77 @@ class AvanceController extends Controller
                 'data' => $data
             ];         
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    public function storeFile(Request $request)
+    {
+        if($request->id > 0){            
+            $avance = Avance::findOrFail($request->id);
+        }
+        if($request->filePDF == []){
+            return [
+                    'success'=>true,
+                    'archivo'=>$avance->archivo,
+                    'warchivo'=>$avance->warchivo,
+                ];                
+        }else{
+            try {
+                $archivo = Storage::put('avances', $request->filePDF);
+                if($request->id > 0){          
+                    if(is_file(storage_path('app/'.$avance->archivo))) {
+                        File::delete(File::glob(storage_path('app/'.$avance->archivo)));
+                    }else{
+                        dd( $avance->archivo . " File does not exist");
+                    }
+                }
+                $success = true;
+            } catch (Exception $e) {
+                $success = false;
+            }
+            return [
+                    'success'=>true,
+                    'archivo'=>$archivo,
+                    'warchivo'=>$request->filePDF->getClientOriginalName(),
+                ];    
+        }
+    }
+
     public function store(Request $request)
     {
-        $avance = Avance::create([
-                'iniciativa_id' => $request->iniciativa_id,
-                'user_id' => $request->user_id,
-                'ejecutado' => $request->ejecutado,
-                'mes' => $request->mes,
-                'warchivo' => $request->warchivo,
-                'archivo' => $request->archivo
-            ]);
+        if($request->id == 0){
+            $avance = Avance::create([
+                    'iniciativa_id' => $request->iniciativa_id,
+                    'user_id' => $request->user_id,
+                    'ejecutado' => $request->ejecutado,
+                    'mes' => $request->mes,
+                    'warchivo' => $request->warchivo,
+                    'archivo' => $request->archivo, 
+                ]);
+        }else{
+            $avance = Avance::findOrFail($request->id);
+            $avance->user_id = $request->user_id;
+            $avance->ejecutado = $request->ejecutado;
+            $avance->warchivo = $request->warchivo;
+            $avance->archivo = $request->archivo; 
+        }
+        try{
+            $avance->save();
+            $success = true;            
+        } catch (Exception $e) {
+            $success = false;
+        }
         return [
                 'success'=>true
-            ];    
+            ]; 
     }
 
     /**

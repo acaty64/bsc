@@ -1,4 +1,5 @@
 <template>
+  <!-- form enctype="multipart/form-data" -->
   <div class="row">
     <div class="col-md-12 box">
       <div class="panel-body">
@@ -17,13 +18,14 @@
             <br>
             <div class="row">
               <label for="inputFile">Seleccione archivo pdf de evidencias:</label> 
-              <input id="inputFile" type="file" @change="processFile($event)" accept="application/pdf">
+              <input id="inputFile" enctype="multipart/form-data" type="file" @change="processFile($event)" accept="application/pdf">
             </div>
           </span>
           <span v-else>
               Archivo: 
               <b>{{ avanceMes.warchivo }}</b>            
               <button class="btn btn-primary btn-sm" v-if="viewBtnBoard2" @click="clickViewBoard2">Modificar Archivo</button>
+              <button class="btn btn-primary btn-sm" v-if="viewBtnBoard2" @click="clickViewPDF">Ver Archivo</button>
           </span>
           <span v-if="viewBoard2">
             <button class="btn btn-primary btn-sm" @click="restoreBoard2">Descartar</button>
@@ -53,7 +55,9 @@
           'iniciativa',
           'avanceMes',
           'swButton',
-          'add'
+          'add',
+          'protocol',
+          'URLdomain',
       ]),
       viewBtnBoard2(){
         if(!this.add && !this.viewBoard2){
@@ -70,7 +74,7 @@
         return false;
       },
       labelTitle(){
-        return (this.avanceMes.id == 'new') 
+        return (this.avanceMes.id == 0) 
           ? "Agregar avance del mes de " + this.wmes[this.now-1] 
           : "Modificar avance del mes de " + this.wmes[this.now-1] ;
       },
@@ -94,51 +98,65 @@
     },   
 
     methods: {
+      clickViewPDF: function () {
+        if(this.filePDF.length == 0){
+          var archivoPDF = this.avanceMes.archivo;
+        // }else{
+        //   var archivoPDF = this.filePDF.getOriginalName();
+        //   window.open(archivoPDF, '_blank', 'fullscreen=yes');
+        }
+        var url = this.protocol+'//'+this.URLdomain+'/storage/'+archivoPDF;
+window.open(url, "_blank");
+console.log('clickViewPDF: ', url);
+        // axios.get(url).then(response=>{
+
+        // }).catch(function (error) {
+        //   console.log('clickViewPDF: ',error);
+        // });
+      },
       clickViewBoard2: function(){
         this.viewBoard2 = true;
       },
       restoreBoard1: function(){
-console.log('TODO AvanceBoard.vue methods: restoreBoard1()');
         this.getData();
         this.$store.dispatch('ChangeEjecutado', this.avanceMes.ejecutado);
         this.restoreBoard2();
         this.$store.commit('swButton', 'modify');
       },
       restoreBoard2: function(){
-console.log('TODO AvanceBoard.vue methods: restoreBoard2()');
         this.viewBoard2 = false;
       },
-      // btnViewReplaceFile: function() {
-        // this.nameFile = this.avanceMes.warchivo;
-        // if(this.labelBtnReplaceFile == "Reemplazar" || this.labelBtnReplaceFile == "Seleccionar"){
-        //   this.labelBtnReplaceFile = "Descartar";
-        //   this.viewReplaceFile = true;
-        // }else{
-        //   this.labelBtnReplaceFile = "Reemplazar";
-        //   this.viewReplaceFile = false;
-        // }
-      // },
 
       clickSave: function(){
-console.log('TODO AvanceBoard.vue methods: clickSave()');
-        var request = this.avanceMes;
-        request.warchivo = this.nameFile;
-console.log('TODO AvanceBoard.vue methods: request.warchivo: ', request.warchivo);
-        request.filePDF = this.filePDF;
-        request.ejecutado = this.valInput;
-        this.$store.dispatch('SaveData', request);
+        toastr.closeButton = false;
+        toastr.debug = false;
+        toastr.showDuration = 50;
+        let mess = '';
+        let consistencia = true;
+        if(this.nameFile == ""){
+          consistencia = false;
+          mess = "Debe seleccionar un archivo con la evidencia de su avance."
+        }
+        if(this.valInput == 0 ){
+          consistencia = false;
+          mess = "Debe ingresar el avance del mes."
+        }
+        if(consistencia){
+          let request = this.avanceMes;
+          request.warchivo = this.nameFile;
+          request.ejecutado = this.valInput;
+          request.filePDF = this.filePDF;
+          let answer = this.$store.dispatch('SaveData', request);
+          this.restoreBoard2();
+          this.restoreBoard1();
+          toastr.success("Avance grabado.");
+        }
+        else{
+          toastr.error(mess);
+        }
+
       },
 
-//       clickEscape: function(){
-// console.log('TODO AvanceBoard.vue methods: clickEscape()');
-        // this.viewReplaceFile = false;
-        // this.labelBtnReplaceFile = "Reemplazar";
-        // this.viewInput = false;
-        
-        // this.getData();
-        // this.$store.dispatch('ChangeEjecutado', this.avanceMes.ejecutado);
-        // this.$store.commit('swButton', 'modify');
-      // },
       getData: function(){
         this.valInput = this.avanceMes.ejecutado;
         this.nameFile = this.avanceMes.warchivo;

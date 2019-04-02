@@ -69,7 +69,7 @@
   import semaforoComponent from './Semaforo.vue'; 
   import avance_board from './AvanceBoard';
   import drawComponent from './Draw';
-  import {mapState} from 'vuex';
+  import { mapState } from 'vuex';
   import axios from 'axios'
   export default {
     created() {

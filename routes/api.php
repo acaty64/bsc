@@ -13,6 +13,11 @@ use Illuminate\Http\Request;
 |
 */
 
+Route::post('avances/storeFile', [
+	'as'	=> 'avance.storeFile',
+	'uses'	=> 'Api\AvanceController@storeFile'
+]);
+
 Route::post('avances/store', [
 	'as'	=> 'avance.store',
 	'uses'	=> 'Api\AvanceController@store'

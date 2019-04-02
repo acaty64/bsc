@@ -15,7 +15,7 @@ class ProgramacionesTableSeeder extends Seeder
         Programacion::create([
         			'iniciativa_id' => 1,
                 	'programado' => 1,
-                	'mes' => 3
+                	'mes' => 4
                 ]);
         Programacion::create([
         			'iniciativa_id' => 1,
