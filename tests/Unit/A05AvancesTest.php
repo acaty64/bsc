@@ -9,38 +9,42 @@ use Tests\TestCase;
 
 class A05AvancesTest extends TestCase
 {
-	/** @test */
+    use RefreshDatabase;
+
+    /** @test */
     public function AddAvancesTest()
     {
-    	Artisan::call('db:seed');
-
     	// Check STORE
     	$request = [
-		      'iniciativa_id' => 1,
-		      'user_id' => 1,
-		      'ejecutado'     => 2,
-		      'mes'     => 3,
-		      'finductor'     => 'aewviandaewfvaivnfajweionv'
-		    ];
+        		'id' => 0,
+                'user_id' => 1,
+                'iniciativa_id' => 1,
+                'ejecutado' => 2,
+                'mes'     => 3,
+                'warchivo'     => 'prueba.pdf',
+                'archivo'     => 'avances/aewviandaewfvaivnfajweionv.pdf',
+            ];
 
-        $response = $this->post("api/avances/store",$request);
-// dd($response);
-    	$response->assertStatus(200);
+        $response = $this->post("api/avances/store", $request);
 
-    	// Check database
-    	$this->assertDatabaseHas('avances', $request);
+        $response->assertStatus(200);
 
-    	//Check UPDATE
-    	$request = [
-    			'id' => 1,
+        // Check database
+        unset($request['id']);
+        $this->assertDatabaseHas('avances', $request);
+
+        //Check UPDATE in AvanceController@store
+        $request = [
+                'id' => 1,
 		      	'iniciativa_id' => 1,
 		      	'user_id' => 1,
 		      	'ejecutado'     => 3,
-		      	'mes'     => 5,
-		      	'finductor'     => 'aewviandaewfvaivnfajweionv'
+		      	// 'mes'     => 5,
+                'archivo'     => 'avances/xxaewviandaewfvaivnfajweionv.pdf',
+                'warchivo'     => 'prueba.pdf',
 		    ];    	
 
-        $response = $this->post("api/avances/update",$request);
+        $response = $this->post("api/avances/store",$request);
     	$response->assertStatus(200);
 
     	// Check database

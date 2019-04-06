@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\objetivo;
+use App\Objetivo;
 use Illuminate\Http\Request;
 
 class ObjetivoController extends Controller
@@ -35,7 +35,12 @@ class ObjetivoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $objetivo = Objetivo::create([
+            'wobjetivo' => $request->wobjetivo,
+            'incidencia' => $request->incidencia,
+            'perspectiva_id' => $request->perspectiva_id         
+        ]);
+        return ['success' => true, 'objetivo_id' => $objetivo->id];
     }
 
     /**
@@ -67,9 +72,16 @@ class ObjetivoController extends Controller
      * @param  \App\objetivo  $objetivo
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, objetivo $objetivo)
+    public function update(Request $request)
     {
-        //
+        $objetivo = Objetivo::findOrFail($request->id);
+        $objetivo->wobjetivo = $request->wobjetivo;
+        $objetivo->incidencia = $request->incidencia;
+        $objetivo->perspectiva_id = $request->perspectiva_id;
+
+        $objetivo->save();
+
+        return ['success' => true];
     }
 
     /**
@@ -78,8 +90,12 @@ class ObjetivoController extends Controller
      * @param  \App\objetivo  $objetivo
      * @return \Illuminate\Http\Response
      */
-    public function destroy(objetivo $objetivo)
+    public function destroy($id)
     {
-        //
+        $objetivo = Objetivo::findOrFail($id);
+
+        $objetivo->delete();
+
+        return ['success' => true];
     }
 }

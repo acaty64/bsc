@@ -9,6 +9,7 @@
 	    <input type="file" name="file">
 	    <button type="submit">Upload</button>
 	</form>	
+	
 @endsection
 
 @section('view','media.blade.php')

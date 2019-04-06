@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\perspectiva;
+use App\Perspectiva;
 use Illuminate\Http\Request;
 
 class PerspectivaController extends Controller
@@ -35,7 +35,10 @@ class PerspectivaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $perspectiva = Perspectiva::create([
+            'wperspectiva' => $request->wperspectiva            
+        ]);
+        return ['success' => true, 'perspectiva_id' => $perspectiva->id];
     }
 
     /**
@@ -67,9 +70,14 @@ class PerspectivaController extends Controller
      * @param  \App\perspectiva  $perspectiva
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, perspectiva $perspectiva)
+    public function update(Request $request)
     {
-        //
+        $perspectiva = Perspectiva::findOrFail($request->id);
+        $perspectiva->wperspectiva = $request->wperspectiva;
+
+        $perspectiva->save();
+
+        return ['success' => true];
     }
 
     /**
@@ -78,8 +86,12 @@ class PerspectivaController extends Controller
      * @param  \App\perspectiva  $perspectiva
      * @return \Illuminate\Http\Response
      */
-    public function destroy(perspectiva $perspectiva)
+    public function destroy($id)
     {
-        //
+        $perspectiva = Perspectiva::findOrFail($id);
+
+        $perspectiva->delete();
+
+        return ['success' => true];
     }
 }

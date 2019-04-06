@@ -121,7 +121,7 @@ console.log('clickViewPDF: ', url);
         this.getData();
         this.$store.dispatch('ChangeEjecutado', this.avanceMes.ejecutado);
         this.restoreBoard2();
-        this.$store.commit('swButton', 'modify');
+        this.$store.commit('status', 'modify');
       },
       restoreBoard2: function(){
         this.viewBoard2 = false;

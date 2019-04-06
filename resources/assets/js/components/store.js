@@ -6,8 +6,9 @@ Vue.use(Vuex);
 export const store = new Vuex.Store({
   
   state: {
+    status: 'add',
     add: true,
-    swButton: 'add',
+    // swButton: 'add',
     URLdomain: window.location.host,
     protocol: window.location.protocol,   
     iniciativa_id: 0,
@@ -34,7 +35,8 @@ export const store = new Vuex.Store({
 				ejecutado: 0,
 				mes: new Date().getMonth() + 1,
 				warchivo: "",
-				archivo: ""
+				archivo: "",
+        published: false,
 			},
     wmes: [
       'Enero',
@@ -52,15 +54,16 @@ export const store = new Vuex.Store({
     ],
 	},
 	mutations: {
-		user_id(state, id){
+		status(state, value){ state.status = value; },
+    user_id(state, id){
       state.user_id = id; 
       state.avanceDefault.user_id = id;
     },
-		iniciativa_id(state, id){ 
+    iniciativa_id(state, id){ 
       state.iniciativa_id = id;
       state.avanceDefault.iniciativa_id = id; 
     },
-		avances(state, value){ state.avances = value; },
+    avances(state, value){ state.avances = value; },
 		programacion(state, value){ state.programacion = value; },
 		iniciativa(state, value){ state.iniciativa = value; },
 		objetivo(state, value){ state.objetivo = value; },
@@ -69,10 +72,11 @@ export const store = new Vuex.Store({
     ejecutadoMes(state, value){ state.ejecutadoMes = value; },
 		ejecutado(state, value){ state.ejecutado = value; },
 		avanceMes(state, value){ state.avanceMes = value; },
-		swButton(state, value){ state.swButton = value; },
+		// swButton(state, value){ state.swButton = value; },
     mes(state, value){ state.mes = value; },
     add(state, value){ state.add = value; },
-		archivo(state, value){ state.avanceMes.archivo = value; },
+    archivo(state, value){ state.avanceMes.archivo = value; },
+    published(state, value){ state.avanceMes.published = value; },
 	},
 	getters: {
     colorIniciativa (state) {
@@ -92,7 +96,18 @@ export const store = new Vuex.Store({
     },
   },
   actions: {
+    SavePublished: function (context) {
+      let id = this.avanceMes.id;
+      let url = context.state.protocol+'//'+context.state.URLdomain+'/api/avances/published/{id}';
+      axios.get(url, {
+console.log('TODO: Change switch published');              
+      }).then(response=>{
 
+      });
+    },
+    ClickButton: function (context, status) {
+      context.commit('status', status);
+    },
     SaveData: function (context, request) {
       let data = new FormData();
       data.append('filePDF', request.filePDF);
@@ -179,8 +194,12 @@ export const store = new Vuex.Store({
         context.commit('avanceMes', context.state.avanceDefault);
         if(!isEmpty(response.data.data.avanceMes)){
           context.commit('avanceMes', context.state.avanceMes);
-          context.commit('swButton', 'modify');
-          context.commit('add', false);
+          // context.commit('swButton', 'modify');
+          context.commit('status', 'modify');
+          // context.commit('add', false);
+        }
+        if(response.data.data.published){
+          context.commit('status', 'published');
         }
         context.dispatch('GetMes');
       }).catch(function (error) {

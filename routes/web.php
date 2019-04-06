@@ -38,6 +38,74 @@ Route::get('storage/{path}/{filename}', function ($path, $filename)
 });
 
 
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+/******************************************************************************/
+/******************************************************************************/
+Route::post('users/store', [
+    'as'    => 'users.store',
+    'uses'  => 'UserController@store'
+]);
+Route::post('users/update', [
+    'as'    => 'users.update',
+    'uses'  => 'UserController@update'
+]);
+Route::delete('users/destroy/{id}', [
+    'as'    => 'users.destroy',
+    'uses'  => 'UserController@destroy'
+]);
+
+
+Route::post('perspectivas/store', [
+    'as'    => 'perspectivas.store',
+    'uses'  => 'PerspectivaController@store'
+]);
+Route::post('perspectivas/update', [
+    'as'    => 'perspectivas.update',
+    'uses'  => 'PerspectivaController@update'
+]);
+Route::delete('perspectivas/destroy/{id}', [
+    'as'    => 'perspectivas.destroy',
+    'uses'  => 'PerspectivaController@destroy'
+]);
+
+Route::post('objetivos/store', [
+    'as'    => 'objetivos.store',
+    'uses'  => 'ObjetivoController@store'
+]);
+Route::post('objetivos/update', [
+    'as'    => 'objetivos.update',
+    'uses'  => 'ObjetivoController@update'
+]);
+Route::delete('objetivos/destroy/{id}', [
+    'as'    => 'objetivos.destroy',
+    'uses'  => 'ObjetivoController@destroy'
+]);
+
+Route::post('iniciativas/store', [
+    'as'    => 'iniciativas.store',
+    'uses'  => 'IniciativaController@store'
+]);
+Route::post('iniciativas/update', [
+    'as'    => 'iniciativas.update',
+    'uses'  => 'IniciativaController@update'
+]);
+Route::delete('iniciativas/destroy/{id}', [
+    'as'    => 'iniciativas.destroy',
+    'uses'  => 'IniciativaController@destroy'
+]);
+
+
+
+/******************************************************************************/
+/******************************************************************************/
+
+
+
+
 /******INICIO EJEMPLO MEDIA ***************/
 /******https://styde.net/almacenamiento-streaming-y-descarga-de-archivos-en-laravel-5-5/***************/
 Route::get('/media', function () {
@@ -49,9 +117,3 @@ Route::post('/media', function () {
     //return request()->file->storeAs('uploads', request()->file->getClientOriginalName());
 });
 /******FIN EJEMPLO MEDIA***************/
-
-
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
-

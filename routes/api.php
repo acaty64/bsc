@@ -33,6 +33,11 @@ Route::post('avances/getData', [
 	'uses'	=> 'Api\AvanceController@getData'
 ]);
 
+Route::get('avances/published/{id}', [
+	'as'	=> 'avance.published',
+	'uses'	=> 'Api\AvanceController@published'
+]);
+
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();

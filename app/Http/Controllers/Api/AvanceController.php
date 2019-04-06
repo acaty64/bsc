@@ -12,6 +12,13 @@ use Illuminate\Support\Facades\Storage;
 
 class AvanceController extends Controller
 {
+    public function published($id)
+    {
+        $avance = Avance::findOrFail($id);
+        $avance->published = true;
+        $avance->save();
+        return true;
+    }
     public function getData(Request $request)
     {
         $iniciativa = Iniciativa::findOrFail($request->iniciativa_id);
@@ -160,16 +167,16 @@ class AvanceController extends Controller
      */
     public function update(Request $request)
     {
-        $id = $request->id;
-        $avance = Avance::findOrFail($id);
-        $avance->user_id = $request->user_id;
-        $avance->ejecutado = $request->ejecutado;
-        $avance->mes = $request->mes;
-        $avance->finductor = $request->finductor;
-        $avance->save();
-        return [
-                'success'=>true
-            ];
+        // $id = $request->id;
+        // $avance = Avance::findOrFail($id);
+        // $avance->user_id = $request->user_id;
+        // $avance->ejecutado = $request->ejecutado;
+        // $avance->mes = $request->mes;
+        // $avance->finductor = $request->finductor;
+        // $avance->save();
+        // return [
+        //         'success'=>true
+        //     ];
     }
 
     /**

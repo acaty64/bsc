@@ -14,7 +14,8 @@ class Avance extends Model
     	'ejecutado',
     	'mes',
     	'warchivo',
-        'archivo'
+        'archivo',
+        'published'
     ];
 
     public function getIniciativa()

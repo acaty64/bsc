@@ -2,84 +2,67 @@
 
 namespace App\Http\Controllers;
 
-use App\iniciativa;
+use App\Iniciativa;
 use Illuminate\Http\Request;
 
 class IniciativaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        $iniciativa = Iniciativa::create([
+            'winiciativa' => $request->winiciativa,
+            'inductor' => $request->inductor,
+            'indicador' => $request->indicador,
+            'meta' => $request->meta,
+            'incidencia' => $request->incidencia,
+            'objetivo_id' => $request->objetivo_id
+        ]);
+        return ['success' => true, 'iniciativa_id' => $iniciativa->id];
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\iniciativa  $iniciativa
-     * @return \Illuminate\Http\Response
-     */
-    public function show(iniciativa $iniciativa)
+    public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\iniciativa  $iniciativa
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(iniciativa $iniciativa)
+    public function edit($id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\iniciativa  $iniciativa
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, iniciativa $iniciativa)
+
+    public function update(Request $request)
     {
-        //
+        $user = Iniciativa::findOrFail($request->id);
+        $user->winiciativa = $request->winiciativa;
+        $user->inductor = $request->inductor;
+        $user->indicador = $request->indicador;
+        $user->meta = $request->meta;
+        $user->incidencia = $request->incidencia;
+        $user->objetivo_id = $request->objetivo_id;
+
+        $user->save();
+
+        return ['success' => true];
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\iniciativa  $iniciativa
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(iniciativa $iniciativa)
+    public function destroy($id)
     {
-        //
+        $user = Iniciativa::findOrFail($id);
+
+        $user->delete();
+
+        return ['success' => true];
     }
 }

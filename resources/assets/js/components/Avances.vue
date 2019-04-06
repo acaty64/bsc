@@ -4,25 +4,33 @@
       <div class="col-md-8 col-md-offset-2">    
         <div class="panel panel-default">
           <div class="panel-heading">INICIATIVA: {{ iniciativa.winiciativa }}</div>
-          
           <div class="container">
             <div class="col-md-7 box">
               <div class="panel-body">
+                Status: {{ wstatus }}
+                <br>
                 <div>Programado en el mes: {{ mes.programado.toFixed(2) }} {{ iniciativa.indicador }}</div>
 
                 <div>Ejecutado en el mes: {{ mes.ejecutado }} {{ iniciativa.indicador }} 
                 </div>
 
-                <span v-if="add && swButton == 'add'">
+                <span v-if="status == 'add'">
+                <!-- <span v-if="add && swButton == 'add'"> -->
                   <button class="btn btn-success btn-sm" @click="clickModify">Agregar</button>
                 </span>
-                <span v-if="swButton == 'modify'">
+                <span v-if="status == 'modify'">
+                <!-- <span v-if="swButton == 'modify'"> -->
                   <div>
                     Evidencia: {{ avanceMes.warchivo }}
                   </div>           
                   <button class="btn btn-primary btn-sm" @click="clickModify">Modificar</button>
+                  <button class="btn btn-primary btn-sm" @click="clickPublish">Publicar</button>
                 </span>
-                <span v-if="swButton == 'viewModify'">
+                <span v-if="status == 'published'">
+                  Evidencia: {{ avanceMes.warchivo }}
+                </span>
+                <span v-if="status == 'viewModify'">
+                <!-- <span v-if="swButton == 'viewModify'"> -->
                   <avance_board></avance_board>
                 </span>
 
@@ -80,6 +88,7 @@
     props: ['user_id', 'iniciativa_id'],
     computed: {
       ...mapState([
+            'status',
             'avances',
             'programacion',
             'iniciativa',
@@ -98,12 +107,20 @@
             'radio',
             'mes',
             'now',
-            'swButton',
+            // 'swButton',
             'add'
           ]),
       colorIniciativa() { return this.$store.getters.colorIniciativa},
       colorObjetivo() { return this.$store.getters.colorObjetivo},
-      colorPerspectiva() { return this.$store.getters.colorPerspectiva},      
+      colorPerspectiva() { return this.$store.getters.colorPerspectiva},
+      wstatus(){
+        switch(this.status) {
+          case 'add': return "AGREGAR"; break;
+          case 'modify': return "EDITAR"; break;
+          case 'viewModify': return "MODIFICACIÓN DE AVANCE"; break;
+          case 'published': return "PUBLICADO"; break;
+        }
+      }      
     },
     data() {
       return {
@@ -113,8 +130,14 @@
       semaforoComponent, avance_board, drawComponent
     },
     methods: {
+      clickPublish: function () {
+// TODO: Change switch published in DB
+        this.$store.dispatch('ClickButton', 'published');
+        this.$store.commit('published', true);
+      },
       clickModify: function(){
-        this.$store.commit('swButton', 'viewModify');
+        this.$store.dispatch('ClickButton', 'viewModify');
+        // this.$store.commit('swButton', 'viewModify');
       },
       setData() {
         this.$store.commit('user_id', this.user_id);
