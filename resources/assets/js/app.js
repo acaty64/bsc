@@ -16,11 +16,11 @@ window.Vue = require('vue');
  */
 
 // Vue.component('example-component', require('./components/ExampleComponent.vue'));
-Vue.component('avances-component', require('./components/Avances.vue'));
+Vue.component('avances-component', require('./components/Avances/Avances.vue'));
 // Vue.component('semaforo-component', require('./components/Semaforo.vue'));
 // Vue.component('avance_board-component', require('./components/AvanceBoard.vue'));
 
-import { store } from './components/store.js';
+import { store } from './components/Avances/store.js';
 
 const app = new Vue({
     el: '#app',

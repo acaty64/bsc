@@ -133,6 +133,7 @@
       clickPublish: function () {
 // TODO: Change switch published in DB
         this.$store.dispatch('ClickButton', 'published');
+        this.$store.dispatch('SavePublished', this.avanceMes.id);
         this.$store.commit('published', true);
       },
       clickModify: function(){

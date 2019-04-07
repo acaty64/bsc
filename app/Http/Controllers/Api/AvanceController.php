@@ -17,7 +17,10 @@ class AvanceController extends Controller
         $avance = Avance::findOrFail($id);
         $avance->published = true;
         $avance->save();
-        return true;
+        return [
+            'success' => true, 
+            'published' => $avance->published 
+        ];
     }
     public function getData(Request $request)
     {
@@ -76,9 +79,9 @@ class AvanceController extends Controller
 
     public function storeFile(Request $request)
     {
-        if($request->id > 0){            
+        if($request->id > 0){
             $avance = Avance::findOrFail($request->id);
-        }
+        }          
         if($request->filePDF == []){
             return [
                     'success'=>true,
@@ -87,20 +90,31 @@ class AvanceController extends Controller
                 ];                
         }else{
             try {
-                $archivo = Storage::put('avances', $request->filePDF);
-                if($request->id > 0){          
-                    if(is_file(storage_path('app/'.$avance->archivo))) {
-                        File::delete(File::glob(storage_path('app/'.$avance->archivo)));
+                $archivo = Storage::put('public/avances', $request->filePDF);
+                if($request->id > 0){
+                    $slash = strrpos($avance->archivo, "/")+1;
+                    $filename = substr($avance->archivo, $slash);
+                    // php artisan storage:link
+                    $filepath = public_path('storage/avances/'.$filename);
+                    if(is_file($filepath)) {
+                        File::delete($filepath);
+                        if(is_file($filepath)) {
+                            $success = false;
+                        }else{
+                            $success = true;
+                        }
                     }else{
-                        dd( $avance->archivo . " File does not exist");
+                        $success = false;
+                        dd( $filepath . " File does not exist");
                     }
+                }else{
+                    $success = true;
                 }
-                $success = true;
             } catch (Exception $e) {
                 $success = false;
             }
             return [
-                    'success'=>true,
+                    'success'=>$success,
                     'archivo'=>$archivo,
                     'warchivo'=>$request->filePDF->getClientOriginalName(),
                 ];    

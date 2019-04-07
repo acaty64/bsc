@@ -97,26 +97,30 @@ export const store = new Vuex.Store({
   },
   actions: {
     SavePublished: function (context) {
-      let id = this.avanceMes.id;
-      let url = context.state.protocol+'//'+context.state.URLdomain+'/api/avances/published/{id}';
-      axios.get(url, {
-console.log('TODO: Change switch published');              
-      }).then(response=>{
-
+      let id = context.state.avanceMes.id;
+      let url = context.state.protocol+'//'+context.state.URLdomain+'/api/avances/published/'+id;
+      axios.get(url)
+      .then(response=>{
+      }).catch(function (error) {
+        console.log('store.js action SavePublished error'); 
       });
     },
     ClickButton: function (context, status) {
       context.commit('status', status);
     },
     SaveData: function (context, request) {
+console.log('SaveData SaveData id: ', context.state.avanceMes.id);
       let data = new FormData();
+      data.append('id', context.state.avanceMes.id);
       data.append('filePDF', request.filePDF);
+console.log('SaveData storeFile data request: ', data);
       let url = context.state.protocol+'//'+context.state.URLdomain+'/api/avances/storeFile';
       axios.post(url, data, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       }).then(response=>{
+console.log('SaveData storeFile response.data: ', response.data);
         context.commit('archivo', response.data.archivo);
         var request = context.state.avanceMes;
         let url = context.state.protocol+'//'+context.state.URLdomain+'/api/avances/store';
@@ -181,7 +185,7 @@ console.log('TODO: Change switch published');
       var request = {
         'iniciativa_id': iniciativa_id,
       };
-      var url = context.state.protocol+'//'+context.state.URLdomain+'/api/avances/getData';
+      var url = context.state.protocol+'//'+context.state.URLdomain+'/api/avances/getData/'+iniciativa_id;
       axios.post(url, request).then(response=>{
       	context.commit('avances', response.data.data.avances);
         context.commit('programacion', response.data.data.programacion);
@@ -191,12 +195,16 @@ console.log('TODO: Change switch published');
         context.commit('programado', response.data.data.programado);
         context.commit('ejecutadoMes', response.data.data.ejecutado);
         context.commit('ejecutado', response.data.data.ejecutado);
-        context.commit('avanceMes', context.state.avanceDefault);
-        if(!isEmpty(response.data.data.avanceMes)){
-          context.commit('avanceMes', context.state.avanceMes);
-          // context.commit('swButton', 'modify');
-          context.commit('status', 'modify');
-          // context.commit('add', false);
+console.log('GetData response.data.data.avanceMes: ',response.data.data.avanceMes);
+        if(isEmpty(response.data.data.avanceMes)){
+          context.commit('avanceMes', context.state.avanceDefault);
+        }else{
+          context.commit('avanceMes', response.data.data.avanceMes);
+          if(response.data.data.avanceMes.published){
+            context.commit('status', 'published');
+          }else{
+            context.commit('status', 'modify');
+          }
         }
         if(response.data.data.published){
           context.commit('status', 'published');
