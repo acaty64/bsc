@@ -8,9 +8,14 @@
             <div class="col-md-7 box">
               <div class="panel-body">
                 Status: {{ wstatus }}
-                <span v-if="status != 'add' && status != 'viewModify'">
+                <span v-if="status != 'add' && status != 'viewModify' && avanceMes.warchivo != ''">
                   <button class="btn btn-primary btn-sm" @click="clickView">Ver Archivo</button>
                 </span>
+                <span v-if="status == 'checked'">
+                  <button class="btn btn-primary btn-sm" @click="clickChecked">Aprobado</button>
+                  <button class="btn btn-primary btn-sm" @click="clickUnchecked">Observado</button>
+                </span>
+
                 <br>
                 <div>Programado en el mes: {{ mes.programado.toFixed(2) }} {{ iniciativa.indicador }}</div>
 
@@ -20,10 +25,12 @@
                 <span v-if="status == 'add'">
                   <button class="btn btn-success btn-sm" @click="clickModify">Agregar</button>
                 </span>
-                <span v-if="status == 'modify'">
+                <span v-else>                  
                   <div>
                     Evidencia: {{ avanceMes.warchivo }}
                   </div>
+                </span>
+                <span v-if="status == 'modify'">
                   <button class="btn btn-success btn-sm" @click="clickModify">Modificar</button>
                   <button class="btn btn-success btn-sm" @click="clickPublish">Publicar</button>
                 </span>
@@ -107,19 +114,21 @@
             'radio',
             'mes',
             'now',
-            // 'swButton',
-            'add'
+            'wmessage1',
+            'wmessage2',
           ]),
       colorIniciativa() { return this.$store.getters.colorIniciativa},
       colorObjetivo() { return this.$store.getters.colorObjetivo},
       colorPerspectiva() { return this.$store.getters.colorPerspectiva},
       wstatus(){
         switch(this.status) {
-          case 'view': return "REVISAR"; break;
+          case 'view': return "VISUALIZACIÓN "+this.wmessage1+"-"+this.wmessage2; break;
           case 'add': return "AGREGAR"; break;
-          case 'modify': return "EDITAR"; break;
+          case 'modify': return "EDITAR "+this.wmessage1; break;
           case 'viewModify': return "MODIFICACIÓN DE AVANCE"; break;
-          case 'published': return "PUBLICADO"; break;
+          case 'published': return "PUBLICADO "+this.wmessage2; break;
+          case 'checked': return "VERIFICACIÓN "+this.wmessage2; break;
+          case 'complete': return "COMPLETO "+this.wmessage1+"-"+this.wmessage2; break;
         }
       }      
     },
@@ -131,6 +140,16 @@
       semaforoComponent, avance_board, drawComponent
     },
     methods: {
+      clickChecked: function () {
+        // TODO: store.js action 
+        // this.$store.dispatch('ClickButton', 'checked');
+        // this.$store.commit('checked', true);
+      },
+      clickUnchecked: function () {
+        // TODO: store.js action 
+        // this.$store.dispatch('ClickButton', 'unchecked');
+        // this.$store.commit('checked', false);
+      },
       clickView: function () {
         var filepath = this.avanceMes.archivo;
         var filenameWithExtension = filepath.replace(/^.*[\\\/]/, '');

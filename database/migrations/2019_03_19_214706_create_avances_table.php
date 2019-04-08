@@ -22,6 +22,7 @@ class CreateAvancesTable extends Migration
             $table->string('warchivo');
             $table->string('archivo');
             $table->boolean('published')->default(false);
+            $table->boolean('checked')->default(false);
             $table->timestamps();
         });
     }

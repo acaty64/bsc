@@ -46408,6 +46408,13 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -46422,9 +46429,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
   },
 
   props: ['user_id', 'iniciativa_id'],
-  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_3_vuex__["b" /* mapState */])(['status', 'avances', 'programacion', 'iniciativa', 'objetivo', 'perspectiva', 'programado', 'ejecutado', 'avanceMes', 'linea', 'circulo1', 'circulo2', 'text1', 'text2', 'ini', 'largo', 'radio', 'mes', 'now',
-  // 'swButton',
-  'add']), {
+  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_3_vuex__["b" /* mapState */])(['status', 'avances', 'programacion', 'iniciativa', 'objetivo', 'perspectiva', 'programado', 'ejecutado', 'avanceMes', 'linea', 'circulo1', 'circulo2', 'text1', 'text2', 'ini', 'largo', 'radio', 'mes', 'now', 'wmessage1', 'wmessage2']), {
     colorIniciativa: function colorIniciativa() {
       return this.$store.getters.colorIniciativa;
     },
@@ -46437,15 +46442,19 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     wstatus: function wstatus() {
       switch (this.status) {
         case 'view':
-          return "REVISAR";break;
+          return "VISUALIZACIÓN " + this.wmessage1 + "-" + this.wmessage2;break;
         case 'add':
           return "AGREGAR";break;
         case 'modify':
-          return "EDITAR";break;
+          return "EDITAR " + this.wmessage1;break;
         case 'viewModify':
           return "MODIFICACIÓN DE AVANCE";break;
         case 'published':
-          return "PUBLICADO";break;
+          return "PUBLICADO " + this.wmessage2;break;
+        case 'checked':
+          return "VERIFICACIÓN " + this.wmessage2;break;
+        case 'complete':
+          return "COMPLETO " + this.wmessage1 + "-" + this.wmessage2;break;
       }
     }
   }),
@@ -46457,6 +46466,16 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     semaforoComponent: __WEBPACK_IMPORTED_MODULE_0__Semaforo_vue___default.a, avance_board: __WEBPACK_IMPORTED_MODULE_1__AvanceBoard___default.a, drawComponent: __WEBPACK_IMPORTED_MODULE_2__Draw___default.a
   },
   methods: {
+    clickChecked: function clickChecked() {
+      // TODO: store.js action 
+      // this.$store.dispatch('ClickButton', 'checked');
+      // this.$store.commit('checked', true);
+    },
+    clickUnchecked: function clickUnchecked() {
+      // TODO: store.js action 
+      // this.$store.dispatch('ClickButton', 'unchecked');
+      // this.$store.commit('checked', false);
+    },
     clickView: function clickView() {
       var filepath = this.avanceMes.archivo;
       var filenameWithExtension = filepath.replace(/^.*[\\\/]/, '');
@@ -47304,7 +47323,9 @@ var render = function() {
                     _vm._s(_vm.wstatus) +
                     "\n              "
                 ),
-                _vm.status != "add" && _vm.status != "viewModify"
+                _vm.status != "add" &&
+                _vm.status != "viewModify" &&
+                _vm.avanceMes.warchivo != ""
                   ? _c("span", [
                       _c(
                         "button",
@@ -47313,6 +47334,28 @@ var render = function() {
                           on: { click: _vm.clickView }
                         },
                         [_vm._v("Ver Archivo")]
+                      )
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.status == "checked"
+                  ? _c("span", [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-primary btn-sm",
+                          on: { click: _vm.clickChecked }
+                        },
+                        [_vm._v("Aprobado")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-primary btn-sm",
+                          on: { click: _vm.clickUnchecked }
+                        },
+                        [_vm._v("Observado")]
                       )
                     ])
                   : _vm._e(),
@@ -47349,18 +47392,18 @@ var render = function() {
                         [_vm._v("Agregar")]
                       )
                     ])
-                  : _vm._e(),
-                _vm._v(" "),
-                _vm.status == "modify"
-                  ? _c("span", [
+                  : _c("span", [
                       _c("div", [
                         _vm._v(
                           "\n                  Evidencia: " +
                             _vm._s(_vm.avanceMes.warchivo) +
                             "\n                "
                         )
-                      ]),
-                      _vm._v(" "),
+                      ])
+                    ]),
+                _vm._v(" "),
+                _vm.status == "modify"
+                  ? _c("span", [
                       _c(
                         "button",
                         {
@@ -47521,10 +47564,45 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex
 var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
 
   state: {
+    wmessage1: '',
+    wmessage2: '',
+    rol: '',
     archivoTemp: '',
     status: 'view',
-    // add: true,
-    // swButton: 'add',
+    roles: {
+      admin: {
+        view: true,
+        add: true,
+        modify: true,
+        viewModify: true,
+        published: true,
+        checked: true
+      },
+      operator: {
+        view: true,
+        add: true,
+        modify: true,
+        viewModify: true,
+        published: true,
+        checked: false
+      },
+      reviser: {
+        view: true,
+        add: false,
+        modify: false,
+        viewModify: false,
+        published: false,
+        checked: true
+      },
+      viewer: {
+        view: true,
+        add: false,
+        modify: false,
+        viewModify: false,
+        published: false,
+        checked: false
+      }
+    },
     URLdomain: window.location.host,
     protocol: window.location.protocol,
     iniciativa_id: 0,
@@ -47557,8 +47635,25 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
     wmes: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Setiembre', 'Octubre', 'Noviembre', 'Diciembre']
   },
   mutations: {
+    wmessage1: function wmessage1(state, value) {
+      state.wmessage1 = value;
+    },
+    wmessage2: function wmessage2(state, value) {
+      state.wmessage2 = value;
+    },
+    rol: function rol(state, value) {
+      state.rol = value;
+    },
     status: function status(state, value) {
-      state.status = value;
+      // let check0 = state.roles[state.rol];
+      var check = state.roles[state.rol][value];
+      console.log('status roles: ', state.roles);
+      console.log('status value: ', value);
+      // console.log('status check0: ', check0);      
+      console.log('status check: ', check);
+      if (check) {
+        state.status = value;
+      }
     },
     user_id: function user_id(state, id) {
       state.user_id = id;
@@ -47736,6 +47831,7 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
       var url = context.state.protocol + '//' + context.state.URLdomain + '/api/avances/getData/' + iniciativa_id;
       axios.get(url).then(function (response) {
         // console.log('GetData response:', response.data.data);
+        context.commit('rol', response.data.data.rol);
         context.commit('avances', response.data.data.avances);
         context.commit('programacion', response.data.data.programacion);
         context.commit('iniciativa', response.data.data.iniciativa);
@@ -47757,7 +47853,18 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
         }
         if (response.data.data.published) {
           context.commit('status', 'published');
+          context.commit('status', 'checked');
+          context.commit('wmessage1', '(Publicado)');
+        } else {
+          context.commit('wmessage1', '(No Publicado)');
         }
+        if (response.data.data.checked) {
+          context.commit('status', 'complete');
+          context.commit('wmessage2', "(Verificado)");
+        } else {
+          context.commit('wmessage2', "(No Verificado)");
+        }
+
         context.dispatch('GetMes');
       }).catch(function (error) {
         console.log('getData: ', error);

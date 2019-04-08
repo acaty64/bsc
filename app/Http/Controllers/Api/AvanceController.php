@@ -42,7 +42,13 @@ class AvanceController extends Controller
                 'objetivo' => (empty($objetivo->programado())) ? 0 : $objetivo->programado(),
                 'perspectiva' => (empty($perspectiva->programado())) ? 0 : $perspectiva->programado(),
             ];
-        $sw_add = true;
+        // $sw_add = true;
+///////////////////////////////// TODO: Login with rol
+        $rol = 'viewer';
+        // $rol = 'operator';
+        // $rol = 'reviser';
+        // $rol = 'admin';
+
         $avanceMes = [];
         foreach ($avances as $avance) {
             if((int)date("m")==$avance->mes){
@@ -59,6 +65,7 @@ class AvanceController extends Controller
                 'programado' => $programado,
                 'now' => (int)date("m"),
                 'avanceMes' => $avanceMes,
+                'rol' => $rol,
             ];
 
         return [

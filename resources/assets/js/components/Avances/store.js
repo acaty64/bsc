@@ -6,10 +6,45 @@ Vue.use(Vuex);
 export const store = new Vuex.Store({
   
   state: {
+    wmessage1: '',
+    wmessage2: '',
+    rol: '',
     archivoTemp: '',
     status: 'view',
-    // add: true,
-    // swButton: 'add',
+    roles: {
+      admin: {
+        view: true,
+        add: true,
+        modify: true,
+        viewModify: true,
+        published: true,
+        checked: true,
+      },
+      operator: {
+        view: true,
+        add: true,
+        modify: true,
+        viewModify: true,
+        published: true,
+        checked: false,
+      },
+      reviser: {
+        view: true,
+        add: false,
+        modify: false,
+        viewModify: false,
+        published: false,
+        checked: true,
+      },
+      viewer: {
+        view: true,
+        add: false,
+        modify: false,
+        viewModify: false,
+        published: false,
+        checked: false,
+      },
+    },
     URLdomain: window.location.host,
     protocol: window.location.protocol,   
     iniciativa_id: 0,
@@ -55,7 +90,20 @@ export const store = new Vuex.Store({
     ],
 	},
 	mutations: {
-		status(state, value){ state.status = value; },
+    wmessage1(state, value){ state.wmessage1 = value; },
+    wmessage2(state, value){ state.wmessage2 = value; },
+    rol(state, value){ state.rol = value; },
+		status(state, value){
+      // let check0 = state.roles[state.rol];
+      let check = state.roles[state.rol][value];     
+console.log('status roles: ', state.roles);      
+console.log('status value: ', value);      
+// console.log('status check0: ', check0);      
+console.log('status check: ', check);
+      if(check){
+        state.status = value; 
+      }      
+    },
     user_id(state, id){
       state.user_id = id; 
       state.avanceDefault.user_id = id;
@@ -207,7 +255,8 @@ console.log('SaveFileTemp this.archivoTemp: ', this.archivoTemp);
       var url = context.state.protocol+'//'+context.state.URLdomain+'/api/avances/getData/'+iniciativa_id;
       axios.get(url).then(response=>{
 // console.log('GetData response:', response.data.data);
-      	context.commit('avances', response.data.data.avances);
+      	context.commit('rol', response.data.data.rol);
+        context.commit('avances', response.data.data.avances);
         context.commit('programacion', response.data.data.programacion);
         context.commit('iniciativa', response.data.data.iniciativa);
         context.commit('objetivo', response.data.data.objetivo);
@@ -228,7 +277,18 @@ console.log('SaveFileTemp this.archivoTemp: ', this.archivoTemp);
         }
         if(response.data.data.published){
           context.commit('status', 'published');
+          context.commit('status', 'checked');
+          context.commit('wmessage1', '(Publicado)');
+        }else{
+          context.commit('wmessage1', '(No Publicado)');
         }
+        if(response.data.data.checked){
+          context.commit('status', 'complete');
+          context.commit('wmessage2', "(Verificado)");
+        }else{
+          context.commit('wmessage2', "(No Verificado)");
+        }
+
         context.dispatch('GetMes');
       }).catch(function (error) {
         console.log('getData: ',error);
