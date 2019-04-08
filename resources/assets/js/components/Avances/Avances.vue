@@ -8,6 +8,9 @@
             <div class="col-md-7 box">
               <div class="panel-body">
                 Status: {{ wstatus }}
+                <span v-if="status != 'add' && status != 'viewModify'">
+                  <button class="btn btn-primary btn-sm" @click="clickView">Ver Archivo</button>
+                </span>
                 <br>
                 <div>Programado en el mes: {{ mes.programado.toFixed(2) }} {{ iniciativa.indicador }}</div>
 
@@ -15,22 +18,19 @@
                 </div>
 
                 <span v-if="status == 'add'">
-                <!-- <span v-if="add && swButton == 'add'"> -->
                   <button class="btn btn-success btn-sm" @click="clickModify">Agregar</button>
                 </span>
                 <span v-if="status == 'modify'">
-                <!-- <span v-if="swButton == 'modify'"> -->
                   <div>
                     Evidencia: {{ avanceMes.warchivo }}
-                  </div>           
-                  <button class="btn btn-primary btn-sm" @click="clickModify">Modificar</button>
-                  <button class="btn btn-primary btn-sm" @click="clickPublish">Publicar</button>
+                  </div>
+                  <button class="btn btn-success btn-sm" @click="clickModify">Modificar</button>
+                  <button class="btn btn-success btn-sm" @click="clickPublish">Publicar</button>
                 </span>
                 <span v-if="status == 'published'">
                   Evidencia: {{ avanceMes.warchivo }}
                 </span>
                 <span v-if="status == 'viewModify'">
-                <!-- <span v-if="swButton == 'viewModify'"> -->
                   <avance_board></avance_board>
                 </span>
 
@@ -115,6 +115,7 @@
       colorPerspectiva() { return this.$store.getters.colorPerspectiva},
       wstatus(){
         switch(this.status) {
+          case 'view': return "REVISAR"; break;
           case 'add': return "AGREGAR"; break;
           case 'modify': return "EDITAR"; break;
           case 'viewModify': return "MODIFICACIÓN DE AVANCE"; break;
@@ -130,15 +131,19 @@
       semaforoComponent, avance_board, drawComponent
     },
     methods: {
+      clickView: function () {
+        var filepath = this.avanceMes.archivo;
+        var filenameWithExtension = filepath.replace(/^.*[\\\/]/, '');
+        var filename = 'storage/avances/'+filenameWithExtension;
+        window.open(filename, '_blank');
+      },
       clickPublish: function () {
-// TODO: Change switch published in DB
         this.$store.dispatch('ClickButton', 'published');
         this.$store.dispatch('SavePublished', this.avanceMes.id);
         this.$store.commit('published', true);
       },
       clickModify: function(){
         this.$store.dispatch('ClickButton', 'viewModify');
-        // this.$store.commit('swButton', 'viewModify');
       },
       setData() {
         this.$store.commit('user_id', this.user_id);

@@ -6,8 +6,9 @@ Vue.use(Vuex);
 export const store = new Vuex.Store({
   
   state: {
-    status: 'add',
-    add: true,
+    archivoTemp: '',
+    status: 'view',
+    // add: true,
     // swButton: 'add',
     URLdomain: window.location.host,
     protocol: window.location.protocol,   
@@ -77,6 +78,7 @@ export const store = new Vuex.Store({
     add(state, value){ state.add = value; },
     archivo(state, value){ state.avanceMes.archivo = value; },
     published(state, value){ state.avanceMes.published = value; },
+    archivoTemp(state, value){ state.archivoTemp = value; },
 	},
 	getters: {
     colorIniciativa (state) {
@@ -96,6 +98,26 @@ export const store = new Vuex.Store({
     },
   },
   actions: {
+    SaveFileTemp: function (context, request) {
+      let data = new FormData();
+      data.append('filePDF', request.filePDF);
+      let url = context.state.protocol+'//'+context.state.URLdomain+'/api/avances/storeFileTemp';
+      axios.post(url, data, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(response=>{
+console.log('SaveFileTemp response.data.archivo: ', response.data.archivo);
+        var filepath = response.data.archivo;
+        var filenameWithExtension = filepath.replace(/^.*[\\\/]/, '');
+        var filename = '/storage/temporal/'+filenameWithExtension;
+        context.commit('archivoTemp', context.state.protocol+'//'+context.state.URLdomain+filename);
+console.log('SaveFileTemp this.archivoTemp: ', this.archivoTemp);
+        return true;
+      }).catch(function (error) {
+        console.log('SaveFileTemp: ',error);
+      });    
+    },
     SavePublished: function (context) {
       let id = context.state.avanceMes.id;
       let url = context.state.protocol+'//'+context.state.URLdomain+'/api/avances/published/'+id;
@@ -109,18 +131,15 @@ export const store = new Vuex.Store({
       context.commit('status', status);
     },
     SaveData: function (context, request) {
-console.log('SaveData SaveData id: ', context.state.avanceMes.id);
       let data = new FormData();
       data.append('id', context.state.avanceMes.id);
       data.append('filePDF', request.filePDF);
-console.log('SaveData storeFile data request: ', data);
       let url = context.state.protocol+'//'+context.state.URLdomain+'/api/avances/storeFile';
       axios.post(url, data, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       }).then(response=>{
-console.log('SaveData storeFile response.data: ', response.data);
         context.commit('archivo', response.data.archivo);
         var request = context.state.avanceMes;
         let url = context.state.protocol+'//'+context.state.URLdomain+'/api/avances/store';
@@ -182,11 +201,12 @@ console.log('SaveData storeFile response.data: ', response.data);
       }
     },
     GetData: (context, iniciativa_id) => {  
-      var request = {
-        'iniciativa_id': iniciativa_id,
-      };
+      // var request = {
+      //   'iniciativa_id': iniciativa_id,
+      // };
       var url = context.state.protocol+'//'+context.state.URLdomain+'/api/avances/getData/'+iniciativa_id;
-      axios.post(url, request).then(response=>{
+      axios.get(url).then(response=>{
+// console.log('GetData response:', response.data.data);
       	context.commit('avances', response.data.data.avances);
         context.commit('programacion', response.data.data.programacion);
         context.commit('iniciativa', response.data.data.iniciativa);
@@ -195,9 +215,9 @@ console.log('SaveData storeFile response.data: ', response.data);
         context.commit('programado', response.data.data.programado);
         context.commit('ejecutadoMes', response.data.data.ejecutado);
         context.commit('ejecutado', response.data.data.ejecutado);
-console.log('GetData response.data.data.avanceMes: ',response.data.data.avanceMes);
         if(isEmpty(response.data.data.avanceMes)){
           context.commit('avanceMes', context.state.avanceDefault);
+          context.commit('status', 'add');
         }else{
           context.commit('avanceMes', response.data.data.avanceMes);
           if(response.data.data.avanceMes.published){

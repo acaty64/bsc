@@ -46436,6 +46436,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     },
     wstatus: function wstatus() {
       switch (this.status) {
+        case 'view':
+          return "REVISAR";break;
         case 'add':
           return "AGREGAR";break;
         case 'modify':
@@ -46455,15 +46457,19 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     semaforoComponent: __WEBPACK_IMPORTED_MODULE_0__Semaforo_vue___default.a, avance_board: __WEBPACK_IMPORTED_MODULE_1__AvanceBoard___default.a, drawComponent: __WEBPACK_IMPORTED_MODULE_2__Draw___default.a
   },
   methods: {
+    clickView: function clickView() {
+      var filepath = this.avanceMes.archivo;
+      var filenameWithExtension = filepath.replace(/^.*[\\\/]/, '');
+      var filename = 'storage/avances/' + filenameWithExtension;
+      window.open(filename, '_blank');
+    },
     clickPublish: function clickPublish() {
-      // TODO: Change switch published in DB
       this.$store.dispatch('ClickButton', 'published');
       this.$store.dispatch('SavePublished', this.avanceMes.id);
       this.$store.commit('published', true);
     },
     clickModify: function clickModify() {
       this.$store.dispatch('ClickButton', 'viewModify');
-      // this.$store.commit('swButton', 'viewModify');
     },
     setData: function setData() {
       this.$store.commit('user_id', this.user_id);
@@ -46713,6 +46719,9 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -46722,9 +46731,22 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
   },
 
 
-  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapState */])(['wmes', 'now', 'user_id', 'iniciativa', 'avanceMes', 'swButton', 'add', 'protocol', 'URLdomain']), {
+  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapState */])(['wmes', 'now', 'user_id', 'iniciativa', 'avanceMes', 'swButton',
+  // 'add',
+  'protocol', 'URLdomain', 'status', 'archivoTemp']), {
+    add: function add() {
+      if (this.status == 'add') {
+        return true;
+      }
+      return false;
+    },
+    viewBtnBoard3: function viewBtnBoard3() {
+      if (this.viewBoard2 && this.nameFile != this.avanceMes.warchivo) {
+        return true;
+      }
+    },
     viewBtnBoard2: function viewBtnBoard2() {
-      if (!this.add && !this.viewBoard2) {
+      if (this.status != 'add' && !this.viewBoard2) {
         return true;
       }
     },
@@ -46763,14 +46785,23 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
   methods: {
     clickViewPDF: function clickViewPDF() {
       if (this.filePDF.length == 0) {
-        var archivoPDF = this.avanceMes.archivo;
+        var filepath = this.avanceMes.archivo;
+        var filenameWithExtension = filepath.replace(/^.*[\\\/]/, '');
+        var filename = 'storage/avances/' + filenameWithExtension;
         // }else{
         //   var archivoPDF = this.filePDF.getOriginalName();
         //   window.open(archivoPDF, '_blank', 'fullscreen=yes');
+        var url = this.protocol + '//' + this.URLdomain + "/" + filename;
+        console.log('clickViewPDF 1: ', url);
+        window.open(url, "_blank");
+        // console.log('clickViewPDF: ', url);
+      } else {
+        console.log('clickViewPDF 2: ', this.archivoTemp);
+        // var archivoPDF = this.filePDF.getOriginalName();
+        // window.open(this.filePDF, '_blank');
+        window.open(this.archivoTemp, "_blank");
+        // return false;
       }
-      var url = this.protocol + '//' + this.URLdomain + '/storage/' + archivoPDF;
-      window.open(url, "_blank");
-      console.log('clickViewPDF: ', url);
       // axios.get(url).then(response=>{
 
       // }).catch(function (error) {
@@ -46787,6 +46818,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       this.$store.commit('status', 'modify');
     },
     restoreBoard2: function restoreBoard2() {
+      this.nameFile = '';
+      this.filePDF = '';
       this.viewBoard2 = false;
     },
 
@@ -46823,9 +46856,12 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       this.nameFile = this.avanceMes.warchivo;
     },
     processFile: function processFile(event) {
+      console.log('processFile: ', event);
       this.nameFile = event.target.files[0].name;
       this.filePDF = event.target.files[0];
-      this.archivo = '';
+      var request = {};
+      request.filePDF = this.filePDF;
+      this.$store.dispatch('SaveFileTemp', request);
     },
     isEmpty: function isEmpty(obj) {
       for (var key in obj) {
@@ -46854,7 +46890,7 @@ var render = function() {
               ? _c(
                   "button",
                   {
-                    staticClass: "btn btn-primary btn-sm",
+                    staticClass: "btn btn-success btn-sm",
                     on: { click: _vm.clickSave }
                   },
                   [_vm._v("Grabar")]
@@ -46927,25 +46963,25 @@ var render = function() {
                 _c("b", [_vm._v(_vm._s(_vm.avanceMes.warchivo))]),
                 _vm._v(" "),
                 _vm.viewBtnBoard2
-                  ? _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-primary btn-sm",
-                        on: { click: _vm.clickViewBoard2 }
-                      },
-                      [_vm._v("Modificar Archivo")]
-                    )
-                  : _vm._e(),
-                _vm._v(" "),
-                _vm.viewBtnBoard2
-                  ? _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-primary btn-sm",
-                        on: { click: _vm.clickViewPDF }
-                      },
-                      [_vm._v("Ver Archivo")]
-                    )
+                  ? _c("span", [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-success btn-sm",
+                          on: { click: _vm.clickViewBoard2 }
+                        },
+                        [_vm._v("Modificar Archivo")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-primary btn-sm",
+                          on: { click: _vm.clickViewPDF }
+                        },
+                        [_vm._v("Ver Archivo")]
+                      )
+                    ])
                   : _vm._e()
               ]),
           _vm._v(" "),
@@ -46976,7 +47012,18 @@ var render = function() {
                         return _vm.processFile($event)
                       }
                     }
-                  })
+                  }),
+                  _vm._v(" "),
+                  _vm.viewBtnBoard3
+                    ? _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-primary btn-sm",
+                          on: { click: _vm.clickViewPDF }
+                        },
+                        [_vm._v("Ver Archivo")]
+                      )
+                    : _vm._e()
                 ])
               ])
             : _vm._e()
@@ -47257,6 +47304,19 @@ var render = function() {
                     _vm._s(_vm.wstatus) +
                     "\n              "
                 ),
+                _vm.status != "add" && _vm.status != "viewModify"
+                  ? _c("span", [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-primary btn-sm",
+                          on: { click: _vm.clickView }
+                        },
+                        [_vm._v("Ver Archivo")]
+                      )
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
                 _c("br"),
                 _vm._v(" "),
                 _c("div", [
@@ -47304,7 +47364,7 @@ var render = function() {
                       _c(
                         "button",
                         {
-                          staticClass: "btn btn-primary btn-sm",
+                          staticClass: "btn btn-success btn-sm",
                           on: { click: _vm.clickModify }
                         },
                         [_vm._v("Modificar")]
@@ -47313,7 +47373,7 @@ var render = function() {
                       _c(
                         "button",
                         {
-                          staticClass: "btn btn-primary btn-sm",
+                          staticClass: "btn btn-success btn-sm",
                           on: { click: _vm.clickPublish }
                         },
                         [_vm._v("Publicar")]
@@ -47461,8 +47521,9 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex
 var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
 
   state: {
-    status: 'add',
-    add: true,
+    archivoTemp: '',
+    status: 'view',
+    // add: true,
     // swButton: 'add',
     URLdomain: window.location.host,
     protocol: window.location.protocol,
@@ -47547,6 +47608,9 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
     },
     published: function published(state, value) {
       state.avanceMes.published = value;
+    },
+    archivoTemp: function archivoTemp(state, value) {
+      state.archivoTemp = value;
     }
   },
   getters: {
@@ -47567,6 +47631,28 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
     }
   },
   actions: {
+    SaveFileTemp: function SaveFileTemp(context, request) {
+      var _this = this;
+
+      var data = new FormData();
+      data.append('filePDF', request.filePDF);
+      var url = context.state.protocol + '//' + context.state.URLdomain + '/api/avances/storeFileTemp';
+      axios.post(url, data, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(function (response) {
+        console.log('SaveFileTemp response.data.archivo: ', response.data.archivo);
+        var filepath = response.data.archivo;
+        var filenameWithExtension = filepath.replace(/^.*[\\\/]/, '');
+        var filename = '/storage/temporal/' + filenameWithExtension;
+        context.commit('archivoTemp', context.state.protocol + '//' + context.state.URLdomain + filename);
+        console.log('SaveFileTemp this.archivoTemp: ', _this.archivoTemp);
+        return true;
+      }).catch(function (error) {
+        console.log('SaveFileTemp: ', error);
+      });
+    },
     SavePublished: function SavePublished(context) {
       var id = context.state.avanceMes.id;
       var url = context.state.protocol + '//' + context.state.URLdomain + '/api/avances/published/' + id;
@@ -47578,18 +47664,15 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
       context.commit('status', status);
     },
     SaveData: function SaveData(context, request) {
-      console.log('SaveData SaveData id: ', context.state.avanceMes.id);
       var data = new FormData();
       data.append('id', context.state.avanceMes.id);
       data.append('filePDF', request.filePDF);
-      console.log('SaveData storeFile data request: ', data);
       var url = context.state.protocol + '//' + context.state.URLdomain + '/api/avances/storeFile';
       axios.post(url, data, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       }).then(function (response) {
-        console.log('SaveData storeFile response.data: ', response.data);
         context.commit('archivo', response.data.archivo);
         var request = context.state.avanceMes;
         var url = context.state.protocol + '//' + context.state.URLdomain + '/api/avances/store';
@@ -47647,11 +47730,12 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
       }
     },
     GetData: function GetData(context, iniciativa_id) {
-      var request = {
-        'iniciativa_id': iniciativa_id
-      };
-      var url = context.state.protocol + '//' + context.state.URLdomain + '/api/avances/getData';
-      axios.post(url, request).then(function (response) {
+      // var request = {
+      //   'iniciativa_id': iniciativa_id,
+      // };
+      var url = context.state.protocol + '//' + context.state.URLdomain + '/api/avances/getData/' + iniciativa_id;
+      axios.get(url).then(function (response) {
+        // console.log('GetData response:', response.data.data);
         context.commit('avances', response.data.data.avances);
         context.commit('programacion', response.data.data.programacion);
         context.commit('iniciativa', response.data.data.iniciativa);
@@ -47660,9 +47744,9 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
         context.commit('programado', response.data.data.programado);
         context.commit('ejecutadoMes', response.data.data.ejecutado);
         context.commit('ejecutado', response.data.data.ejecutado);
-        console.log('GetData response.data.data.avanceMes: ', response.data.data.avanceMes);
         if (isEmpty(response.data.data.avanceMes)) {
           context.commit('avanceMes', context.state.avanceDefault);
+          context.commit('status', 'add');
         } else {
           context.commit('avanceMes', response.data.data.avanceMes);
           if (response.data.data.avanceMes.published) {

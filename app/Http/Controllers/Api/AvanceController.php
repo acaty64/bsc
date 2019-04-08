@@ -22,9 +22,9 @@ class AvanceController extends Controller
             'published' => $avance->published 
         ];
     }
-    public function getData(Request $request)
+    public function getData($iniciativa_id)
     {
-        $iniciativa = Iniciativa::findOrFail($request->iniciativa_id);
+        $iniciativa = Iniciativa::findOrFail($iniciativa_id);
         $iniciativas = $iniciativa->getIniciativasObjetivo();        
         $objetivo = $iniciativa->getObjetivo();
         $perspectiva = $iniciativa->getObjetivo()->getPerspectiva();
@@ -77,6 +77,22 @@ class AvanceController extends Controller
         //
     }
 
+    public function storeFileTemp(Request $request)
+    {
+        try {
+            foreach (glob("storage/temporal/*.pdf") as $filename) {
+               unlink($filename);
+            }           
+            $archivo = Storage::put('public/temporal', $request->filePDF);
+        } catch (Exception $e) {
+            return 'storeFileTemp error';
+        }
+        return [
+            'success'=>true,
+            'archivo'=>$archivo
+        ];
+    }
+
     public function storeFile(Request $request)
     {
         if($request->id > 0){
@@ -92,8 +108,9 @@ class AvanceController extends Controller
             try {
                 $archivo = Storage::put('public/avances', $request->filePDF);
                 if($request->id > 0){
-                    $slash = strrpos($avance->archivo, "/")+1;
-                    $filename = substr($avance->archivo, $slash);
+                    // $slash = strrpos($avance->archivo, "/")+1;
+                    $filename = basename($avance->archivo);
+                    // $filename = substr($avance->archivo, $slash);
                     // php artisan storage:link
                     $filepath = public_path('storage/avances/'.$filename);
                     if(is_file($filepath)) {

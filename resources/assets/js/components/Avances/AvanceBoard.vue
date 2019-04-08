@@ -5,7 +5,7 @@
       <div class="panel-body">
         <div class="panel-heading">
           <div>{{ labelTitle }}
-            <button class="btn btn-primary btn-sm" v-if="viewBtnSave" @click="clickSave">Grabar</button>
+            <button class="btn btn-success btn-sm" v-if="viewBtnSave" @click="clickSave">Grabar</button>
             <button class="btn btn-primary btn-sm" @click="restoreBoard1">Descartar</button>
           </div>
         </div>
@@ -23,15 +23,18 @@
           </span>
           <span v-else>
               Archivo: 
-              <b>{{ avanceMes.warchivo }}</b>            
-              <button class="btn btn-primary btn-sm" v-if="viewBtnBoard2" @click="clickViewBoard2">Modificar Archivo</button>
-              <button class="btn btn-primary btn-sm" v-if="viewBtnBoard2" @click="clickViewPDF">Ver Archivo</button>
+              <b>{{ avanceMes.warchivo }}</b> 
+              <span v-if="viewBtnBoard2">
+                <button class="btn btn-success btn-sm" @click="clickViewBoard2">Modificar Archivo</button>
+                <button class="btn btn-primary btn-sm" @click="clickViewPDF">Ver Archivo</button>                
+              </span>           
           </span>
           <span v-if="viewBoard2">
             <button class="btn btn-primary btn-sm" @click="restoreBoard2">Descartar</button>
             <div>
               <label for="replaceFile">Seleccione archivo pdf de reemplazo:</label> 
               <input id="replaceFile" type="file" @change="processFile($event)" accept="application/pdf">                
+              <button class="btn btn-primary btn-sm" v-if="viewBtnBoard3" @click="clickViewPDF">Ver Archivo</button>                
             </div>
           </span>
         </div>
@@ -55,12 +58,25 @@
           'iniciativa',
           'avanceMes',
           'swButton',
-          'add',
+          // 'add',
           'protocol',
           'URLdomain',
+          'status',
+          'archivoTemp'
       ]),
+      add(){
+        if(this.status == 'add'){
+          return true;
+        }
+        return false;
+      },
+      viewBtnBoard3(){
+        if(this.viewBoard2 && this.nameFile != this.avanceMes.warchivo){
+          return true;
+        }
+      },
       viewBtnBoard2(){
-        if(!this.add && !this.viewBoard2){
+        if(this.status != 'add' && !this.viewBoard2){
           return true;
         }
       },
@@ -100,14 +116,24 @@
     methods: {
       clickViewPDF: function () {
         if(this.filePDF.length == 0){
-          var archivoPDF = this.avanceMes.archivo;
+          let filepath = this.avanceMes.archivo;
+          let filenameWithExtension = filepath.replace(/^.*[\\\/]/, '');
+          let filename = 'storage/avances/'+filenameWithExtension;          
         // }else{
         //   var archivoPDF = this.filePDF.getOriginalName();
         //   window.open(archivoPDF, '_blank', 'fullscreen=yes');
+          let url = this.protocol+'//'+this.URLdomain+"/"+filename;
+console.log('clickViewPDF 1: ', url);       
+          window.open(url, "_blank");
+// console.log('clickViewPDF: ', url);
+        }else{
+console.log('clickViewPDF 2: ', this.archivoTemp);       
+          // var archivoPDF = this.filePDF.getOriginalName();
+          // window.open(this.filePDF, '_blank');
+          window.open(this.archivoTemp, "_blank"); 
+          // return false;
+
         }
-        var url = this.protocol+'//'+this.URLdomain+'/storage/'+archivoPDF;
-window.open(url, "_blank");
-console.log('clickViewPDF: ', url);
         // axios.get(url).then(response=>{
 
         // }).catch(function (error) {
@@ -124,6 +150,8 @@ console.log('clickViewPDF: ', url);
         this.$store.commit('status', 'modify');
       },
       restoreBoard2: function(){
+        this.nameFile = '';
+        this.filePDF = '';
         this.viewBoard2 = false;
       },
 
@@ -162,9 +190,12 @@ console.log('clickViewPDF: ', url);
         this.nameFile = this.avanceMes.warchivo;
       },
       processFile: function(event) {
+console.log('processFile: ', event);
         this.nameFile = event.target.files[0].name;
         this.filePDF = event.target.files[0];
-        this.archivo = '';
+        let request = {};
+        request.filePDF = this.filePDF;
+        this.$store.dispatch('SaveFileTemp', request);
       },
       isEmpty: function (obj) {
         for (var key in obj) {
