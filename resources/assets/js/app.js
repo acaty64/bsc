@@ -15,7 +15,7 @@ window.Vue = require('vue');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-// Vue.component('example-component', require('./components/ExampleComponent.vue'));
+Vue.component('example-component', require('./components/ExampleComponent.vue'));
 Vue.component('avances-component', require('./components/Avances/Avances.vue'));
 // Vue.component('semaforo-component', require('./components/Semaforo.vue'));
 // Vue.component('avance_board-component', require('./components/AvanceBoard.vue'));
