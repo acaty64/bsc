@@ -46278,7 +46278,7 @@ exports = module.exports = __webpack_require__(14)(false);
 
 
 // module
-exports.push([module.i, "\nbody {\n    font-family: Helvetica Neue, Arial, sans-serif;\n}\npolygon {\n    fill: #42b983;\n    opacity: .75;\n}\ncircle {\n    fill: transparent;\n    stroke: #999;\n}\ntext {\n    font-family: Helvetica Neue, Arial, sans-serif;\n    font-size: 10px;\n    fill: #666;\n}\nlabel {\n    display: inline-block;\n    margin-left: 10px;\n    width: 20px;\n}\n#raw {\n    position: absolute;\n    top: 0;\n    left: 300px;\n} \n", ""]);
+exports.push([module.i, "\n.panel-heading {\n  text-align: center;\n}\n.cuadro {\n  padding-left: 40px;\n}\n.objetivo {\n  margin-bottom: 0;\n}\nbody {\n    font-family: Helvetica Neue, Arial, sans-serif;\n}\npolygon {\n    /*fill: #42b983;*/\n    /*fill: lime;*/\n    opacity: .75;\n}\ncircle {\n    fill: transparent;\n    stroke: #999;\n}\ntext {\n    font-family: Helvetica Neue, Arial, sans-serif;\n    font-size: 10px;\n    fill: #666;\n}\nlabel {\n    display: inline-block;\n    margin-left: 10px;\n    width: 20px;\n}\n#raw {\n    position: absolute;\n    top: 0;\n    left: 300px;\n} \n", ""]);
 
 // exports
 
@@ -46336,11 +46336,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
@@ -46348,30 +46343,49 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     this.fetchStats();
   },
 
-  props: ['fill_grade'],
+  props: ['fill_grade', 'title', 'color'],
   data: function data() {
     return {
-      faces: 360,
-      long: 100,
+      faces: 180,
+      long: 80,
       stats: []
     };
   },
 
   computed: {
+    svg_width: function svg_width() {
+      return this.long * 2;
+    },
+    svg_height: function svg_height() {
+      return this.long * 2;
+    },
+    cx: function cx() {
+      return this.long;
+    },
+    cy: function cy() {
+      return this.long;
+    },
+    r: function r() {
+      return this.long * 0.8;
+    },
     // a computed property for the polygon's points
     points: function points() {
       var total = this.stats.length;
+      console.log('points total: ', total);
+      var center = this.long;
       return this.stats.map(function (stat, i) {
-        var point = valueToPoint(stat.value, i, total);
+        var point = valueToPoint(stat.value, i, total, center);
         return point.x + ',' + point.y;
       }).join(' ');
     }
   },
   methods: {
     fetchStats: function fetchStats() {
+      var fill_faces = this.fill_grade / 360 * this.faces;
+      console.log('fetchStats ' + this.fill_grade + ": ", fill_faces);
       this.stats = [];
       for (var i = 0; i < this.faces; i++) {
-        if (i > this.fill_grade) {
+        if (i > fill_faces) {
           var largo = 0;
         } else {
           var largo = this.long;
@@ -46388,14 +46402,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 // math helper...
-function valueToPoint(value, index, total) {
+function valueToPoint(value, index, total, center) {
   var x = 0;
   var y = -value * 0.8;
   var angle = Math.PI * 2 / total * index;
   var cos = Math.cos(angle);
   var sin = Math.sin(angle);
-  var tx = x * cos - y * sin + 100;
-  var ty = x * sin + y * cos + 100;
+  // var tx    = x * cos - y * sin + 100
+  var tx = x * cos - y * sin + center;
+  // var ty    = x * sin + y * cos + 100
+  var ty = x * sin + y * cos + center;
   return {
     x: tx,
     y: ty
@@ -46410,21 +46426,15 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "container" }, [
-    _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col-md-8 col-md-offset-2" }, [
-        _c("div", { staticClass: "panel panel-default" }, [
-          _c("div", { staticClass: "panel-heading" }, [
-            _vm._v("Example Component")
-          ]),
+  return _c("div", { staticClass: "float-left" }, [
+    _c("div", { staticClass: "panel panel-default objetivo" }, [
+      _c("div", { staticClass: "panel-heading" }, [_vm._v(_vm._s(_vm.title))]),
+      _vm._v(" "),
+      _c("div", { staticClass: "panel-body cuadro" }, [
+        _c("svg", { attrs: { width: _vm.svg_width, height: _vm.svg_height } }, [
+          _c("polygon", { attrs: { points: _vm.points, fill: _vm.color } }),
           _vm._v(" "),
-          _c("div", { staticClass: "panel-body" }, [
-            _c("svg", { attrs: { width: "200", height: "200" } }, [
-              _c("polygon", { attrs: { points: _vm.points } }),
-              _vm._v(" "),
-              _c("circle", { attrs: { cx: "100", cy: "100", r: "80" } })
-            ])
-          ])
+          _c("circle", { attrs: { cx: _vm.cx, cy: _vm.cy, r: _vm.r } })
         ])
       ])
     ])
