@@ -94,7 +94,12 @@ export const store = new Vuex.Store({
     wmessage2(state, value){ state.wmessage2 = value; },
     rol(state, value){ state.rol = value; },
 		status(state, value){
-      let check = state.roles[state.rol][value];
+      // let check0 = state.roles[state.rol];
+      let check = state.roles[state.rol][value];     
+console.log('status roles: ', state.roles);      
+console.log('status value: ', value);      
+// console.log('status check0: ', check0);      
+console.log('status check: ', check);
       if(check){
         state.status = value; 
       }      

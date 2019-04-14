@@ -1,10 +1,4 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-
-Vue.use(Vuex);
-
-export const store = new Vuex.Store({
-  
+export default {
   state: {
     wmessage1: '',
     wmessage2: '',
@@ -116,7 +110,6 @@ export const store = new Vuex.Store({
     ejecutadoMes(state, value){ state.ejecutadoMes = value; },
 		ejecutado(state, value){ state.ejecutado = value; },
 		avanceMes(state, value){ state.avanceMes = value; },
-		// swButton(state, value){ state.swButton = value; },
     mes(state, value){ state.mes = value; },
     add(state, value){ state.add = value; },
     archivo(state, value){ state.avanceMes.archivo = value; },
@@ -124,17 +117,17 @@ export const store = new Vuex.Store({
     archivoTemp(state, value){ state.archivoTemp = value; },
 	},
 	getters: {
-    colorIniciativa (state) {
+    colorIniciativa (state, getters) {
       var ejec = state.ejecutado.iniciativa;
       var prog = state.programado.iniciativa;
       return color(ejec, prog);
     },
-    colorObjetivo (state) {
+    colorObjetivo (state, getters) {
       var ejec = state.ejecutado.objetivo;
       var prog = state.programado.objetivo;
       return color(ejec, prog);
     },
-    colorPerspectiva (state) {
+    colorPerspectiva (state, getters) {
       var ejec = state.ejecutado.perspectiva;
       var prog = state.programado.perspectiva;
       return color(ejec, prog);
@@ -150,12 +143,10 @@ export const store = new Vuex.Store({
           'Content-Type': 'multipart/form-data'
         }
       }).then(response=>{
-console.log('SaveFileTemp response.data.archivo: ', response.data.archivo);
         var filepath = response.data.archivo;
         var filenameWithExtension = filepath.replace(/^.*[\\\/]/, '');
         var filename = '/storage/temporal/'+filenameWithExtension;
         context.commit('archivoTemp', context.state.protocol+'//'+context.state.URLdomain+filename);
-console.log('SaveFileTemp this.archivoTemp: ', this.archivoTemp);
         return true;
       }).catch(function (error) {
         console.log('SaveFileTemp: ',error);
@@ -243,13 +234,9 @@ console.log('SaveFileTemp this.archivoTemp: ', this.archivoTemp);
         context.commit('mes', newMes);
       }
     },
-    GetData: (context, iniciativa_id) => {  
-      // var request = {
-      //   'iniciativa_id': iniciativa_id,
-      // };
+    GetData: (context, iniciativa_id) => {
       var url = context.state.protocol+'//'+context.state.URLdomain+'/api/avances/getData/'+iniciativa_id;
       axios.get(url).then(response=>{
-// console.log('GetData response:', response.data.data);
       	context.commit('rol', response.data.data.rol);
         context.commit('avances', response.data.data.avances);
         context.commit('programacion', response.data.data.programacion);
@@ -311,7 +298,7 @@ console.log('SaveFileTemp this.archivoTemp: ', this.archivoTemp);
     },
 
 	},
-});
+};
 
 function findByTipo(items, tipo) {
         for (var i in items) {

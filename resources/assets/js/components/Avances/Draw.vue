@@ -1,9 +1,6 @@
 <template>
   <div class="container">
-    <!-- <div class="row"> -->
-      <div class="col-md-7">    
-      <!-- <div class="col-md-7">     -->
-      <!-- <div class="col-md-8 col-md-offset-2">     -->
+      <div class="col-md-7">
         <div class="panel panel-default">
           <div class="panel-body">
             <svg height="80" width="600">
@@ -19,7 +16,6 @@
           </div>
         </div>
       </div>
-    <!-- </div> -->
   </div>
 </template>
 
@@ -38,9 +34,10 @@
       };
     },
     computed: {
-      ...mapState([
-            'programado', 'ejecutado'
-          ]),
+      ...mapState({
+            programado: state => state.avances.programado, 
+            ejecutado: state => state.avances.ejecutado
+          }),
       colorIniciativa() { return this.$store.getters.colorIniciativa },
       linea() { 
         return {

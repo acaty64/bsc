@@ -15,6 +15,10 @@
                   <button class="btn btn-primary btn-sm" @click="clickChecked">Aprobado</button>
                   <button class="btn btn-primary btn-sm" @click="clickUnchecked">Observado</button>
                 </span>
+                <span v-if="status == 'modify'">
+                  <button class="btn btn-success btn-sm" @click="clickModify">Modificar</button>
+                  <button class="btn btn-success btn-sm" @click="clickPublish">Publicar</button>
+                </span>
 
                 <br>
                 <div>Programado en el mes: {{ mes.programado.toFixed(2) }} {{ iniciativa.indicador }}</div>
@@ -30,13 +34,7 @@
                     Evidencia: {{ avanceMes.warchivo }}
                   </div>
                 </span>
-                <span v-if="status == 'modify'">
-                  <button class="btn btn-success btn-sm" @click="clickModify">Modificar</button>
-                  <button class="btn btn-success btn-sm" @click="clickPublish">Publicar</button>
-                </span>
-                <span v-if="status == 'published'">
-                  Evidencia: {{ avanceMes.warchivo }}
-                </span>
+
                 <span v-if="status == 'viewModify'">
                   <avance_board></avance_board>
                 </span>
@@ -84,7 +82,7 @@
   import semaforoComponent from './Semaforo.vue'; 
   import avance_board from './AvanceBoard';
   import drawComponent from './Draw';
-  import { mapState } from 'vuex';
+  import { mapState, mapGetters } from 'vuex';
   import axios from 'axios'
   export default {
     created() {
@@ -94,32 +92,34 @@
     },
     props: ['user_id', 'iniciativa_id'],
     computed: {
-      ...mapState([
-            'status',
-            'avances',
-            'programacion',
-            'iniciativa',
-            'objetivo',
-            'perspectiva',
-            'programado',
-            'ejecutado',
-            'avanceMes',
-            'linea',
-            'circulo1',
-            'circulo2',
-            'text1',
-            'text2',
-            'ini',
-            'largo',
-            'radio',
-            'mes',
-            'now',
-            'wmessage1',
-            'wmessage2',
-          ]),
-      colorIniciativa() { return this.$store.getters.colorIniciativa},
-      colorObjetivo() { return this.$store.getters.colorObjetivo},
-      colorPerspectiva() { return this.$store.getters.colorPerspectiva},
+      ...mapState({
+            status: state => state.avances.status,
+            avances: state => state.avances.avances,
+            programacion: state => state.avances.programacion,
+            iniciativa: state => state.avances.iniciativa,
+            objetivo: state => state.avances.objetivo,
+            perspectiva: state => state.avances.perspectiva,
+            programado: state => state.avances.programado,
+            ejecutado: state => state.avances.ejecutado,
+            avanceMes: state => state.avances.avanceMes,
+            linea: state => state.avances.linea,
+            circulo1: state => state.avances.circulo1,
+            circulo2: state => state.avances.circulo2,
+            text1: state => state.avances.text1,
+            text2: state => state.avances.text2,
+            ini: state => state.avances.ini,
+            largo: state => state.avances.largo,
+            radio: state => state.avances.radio,
+            mes: state => state.avances.mes,
+            now: state => state.avances.now,
+            wmessage1: state => state.avances.wmessage1,
+            wmessage2: state => state.avances.wmessage2,
+        }),
+      ...mapGetters({
+            colorIniciativa: 'colorIniciativa', 
+            colorObjetivo: 'colorObjetivo', 
+            colorPerspectiva: 'colorPerspectiva'    
+          }),
       wstatus(){
         switch(this.status) {
           case 'view': return "VISUALIZACIÓN "+this.wmessage1+"-"+this.wmessage2; break;
@@ -131,10 +131,6 @@
           case 'complete': return "COMPLETO "+this.wmessage1+"-"+this.wmessage2; break;
         }
       }      
-    },
-    data() {
-      return {
-      }
     },
     components: {
       semaforoComponent, avance_board, drawComponent

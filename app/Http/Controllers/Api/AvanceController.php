@@ -44,8 +44,8 @@ class AvanceController extends Controller
             ];
         // $sw_add = true;
 ///////////////////////////////// TODO: Login with rol
-        $rol = 'viewer';
-        // $rol = 'operator';
+        // $rol = 'viewer';
+        $rol = 'operator';
         // $rol = 'reviser';
         // $rol = 'admin';
 

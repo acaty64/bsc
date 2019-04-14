@@ -1,5 +1,4 @@
 <template>
-  <!-- form enctype="multipart/form-data" -->
   <div class="row">
     <div class="col-md-12 box">
       <div class="panel-body">
@@ -25,7 +24,7 @@
               Archivo: 
               <b>{{ avanceMes.warchivo }}</b> 
               <span v-if="viewBtnBoard2">
-                <button class="btn btn-success btn-sm" @click="clickViewBoard2">Modificar Archivo</button>
+                <button class="btn btn-success btn-sm" @click="clickViewBoard2">Seleccionar Nuevo Archivo</button>
                 <button class="btn btn-primary btn-sm" @click="clickViewPDF">Ver Archivo</button>                
               </span>           
           </span>
@@ -51,19 +50,18 @@
     },
 
     computed: {
-      ...mapState([
-          'wmes',
-          'now',
-          'user_id',
-          'iniciativa',
-          'avanceMes',
-          'swButton',
-          // 'add',
-          'protocol',
-          'URLdomain',
-          'status',
-          'archivoTemp'
-      ]),
+      ...mapState({
+          wmes: state => state.avances.wmes,
+          now: state => state.avances.now,
+          user_id: state => state.avances.user_id,
+          iniciativa: state => state.avances.iniciativa,
+          avanceMes: state => state.avances.avanceMes,
+          swButton: state => state.avances.swButton,
+          protocol: state => state.avances.protocol,
+          URLdomain: state => state.avances.URLdomain,
+          status: state => state.avances.status,
+          archivoTemp: state => state.avances.archivoTemp
+      }),
       add(){
         if(this.status == 'add'){
           return true;

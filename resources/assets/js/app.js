@@ -20,7 +20,8 @@ Vue.component('avances-component', require('./components/Avances/Avances.vue'));
 // Vue.component('semaforo-component', require('./components/Semaforo.vue'));
 // Vue.component('avance_board-component', require('./components/AvanceBoard.vue'));
 
-import { store } from './components/Avances/store.js';
+// import { store } from './components/Avances/store.js';
+import { store } from './store/index.js';
 
 const app = new Vue({
     el: '#app',

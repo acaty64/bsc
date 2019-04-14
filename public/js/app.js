@@ -516,9 +516,9 @@ module.exports = g;
 "use strict";
 /* unused harmony export Store */
 /* unused harmony export install */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return mapState; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return mapState; });
 /* unused harmony export mapMutations */
-/* unused harmony export mapGetters */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return mapGetters; });
 /* unused harmony export mapActions */
 /* unused harmony export createNamespacedHelpers */
 /**
@@ -12783,7 +12783,7 @@ function applyToTag (styleElement, obj) {
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(17);
-module.exports = __webpack_require__(66);
+module.exports = __webpack_require__(67);
 
 
 /***/ }),
@@ -12792,7 +12792,7 @@ module.exports = __webpack_require__(66);
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Avances_store_js__ = __webpack_require__(65);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_index_js__ = __webpack_require__(65);
 
 /**
  * First we will load all of this project's JavaScript dependencies which
@@ -12815,11 +12815,12 @@ Vue.component('avances-component', __webpack_require__(51));
 // Vue.component('semaforo-component', require('./components/Semaforo.vue'));
 // Vue.component('avance_board-component', require('./components/AvanceBoard.vue'));
 
+// import { store } from './components/Avances/store.js';
 
 
 var app = new Vue({
   el: '#app',
-  store: __WEBPACK_IMPORTED_MODULE_0__components_Avances_store_js__["a" /* store */]
+  store: __WEBPACK_IMPORTED_MODULE_0__store_index_js__["a" /* store */]
 });
 
 /***/ }),
@@ -46638,8 +46639,6 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
-//
-//
 
 
 
@@ -46654,16 +46653,78 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
   },
 
   props: ['user_id', 'iniciativa_id'],
-  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_3_vuex__["b" /* mapState */])(['status', 'avances', 'programacion', 'iniciativa', 'objetivo', 'perspectiva', 'programado', 'ejecutado', 'avanceMes', 'linea', 'circulo1', 'circulo2', 'text1', 'text2', 'ini', 'largo', 'radio', 'mes', 'now', 'wmessage1', 'wmessage2']), {
-    colorIniciativa: function colorIniciativa() {
-      return this.$store.getters.colorIniciativa;
+  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_3_vuex__["c" /* mapState */])({
+    status: function status(state) {
+      return state.avances.status;
     },
-    colorObjetivo: function colorObjetivo() {
-      return this.$store.getters.colorObjetivo;
+    avances: function avances(state) {
+      return state.avances.avances;
     },
-    colorPerspectiva: function colorPerspectiva() {
-      return this.$store.getters.colorPerspectiva;
+    programacion: function programacion(state) {
+      return state.avances.programacion;
     },
+    iniciativa: function iniciativa(state) {
+      return state.avances.iniciativa;
+    },
+    objetivo: function objetivo(state) {
+      return state.avances.objetivo;
+    },
+    perspectiva: function perspectiva(state) {
+      return state.avances.perspectiva;
+    },
+    programado: function programado(state) {
+      return state.avances.programado;
+    },
+    ejecutado: function ejecutado(state) {
+      return state.avances.ejecutado;
+    },
+    avanceMes: function avanceMes(state) {
+      return state.avances.avanceMes;
+    },
+    linea: function linea(state) {
+      return state.avances.linea;
+    },
+    circulo1: function circulo1(state) {
+      return state.avances.circulo1;
+    },
+    circulo2: function circulo2(state) {
+      return state.avances.circulo2;
+    },
+    text1: function text1(state) {
+      return state.avances.text1;
+    },
+    text2: function text2(state) {
+      return state.avances.text2;
+    },
+    ini: function ini(state) {
+      return state.avances.ini;
+    },
+    largo: function largo(state) {
+      return state.avances.largo;
+    },
+    radio: function radio(state) {
+      return state.avances.radio;
+    },
+    mes: function mes(state) {
+      return state.avances.mes;
+    },
+    now: function now(state) {
+      return state.avances.now;
+    },
+    wmessage1: function wmessage1(state) {
+      return state.avances.wmessage1;
+    },
+    wmessage2: function wmessage2(state) {
+      return state.avances.wmessage2;
+    }
+  }), Object(__WEBPACK_IMPORTED_MODULE_3_vuex__["b" /* mapGetters */])({
+    colorIniciativa: 'colorIniciativa',
+    colorObjetivo: 'colorObjetivo',
+    colorPerspectiva: 'colorPerspectiva'
+  }), {
+    // colorIniciativa() { return this.$store.getters.colorIniciativa},
+    // colorObjetivo() { return this.$store.getters.colorObjetivo},
+    // colorPerspectiva() { return this.$store.getters.colorPerspectiva},
     wstatus: function wstatus() {
       switch (this.status) {
         case 'view':
@@ -46683,10 +46744,6 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       }
     }
   }),
-  data: function data() {
-    return {};
-  },
-
   components: {
     semaforoComponent: __WEBPACK_IMPORTED_MODULE_0__Semaforo_vue___default.a, avance_board: __WEBPACK_IMPORTED_MODULE_1__AvanceBoard___default.a, drawComponent: __WEBPACK_IMPORTED_MODULE_2__Draw___default.a
   },
@@ -46965,7 +47022,6 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -46975,9 +47031,38 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
   },
 
 
-  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapState */])(['wmes', 'now', 'user_id', 'iniciativa', 'avanceMes', 'swButton',
-  // 'add',
-  'protocol', 'URLdomain', 'status', 'archivoTemp']), {
+  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["c" /* mapState */])({
+    wmes: function wmes(state) {
+      return state.avances.wmes;
+    },
+    now: function now(state) {
+      return state.avances.now;
+    },
+    user_id: function user_id(state) {
+      return state.avances.user_id;
+    },
+    iniciativa: function iniciativa(state) {
+      return state.avances.iniciativa;
+    },
+    avanceMes: function avanceMes(state) {
+      return state.avances.avanceMes;
+    },
+    swButton: function swButton(state) {
+      return state.avances.swButton;
+    },
+    protocol: function protocol(state) {
+      return state.avances.protocol;
+    },
+    URLdomain: function URLdomain(state) {
+      return state.avances.URLdomain;
+    },
+    status: function status(state) {
+      return state.avances.status;
+    },
+    archivoTemp: function archivoTemp(state) {
+      return state.avances.archivoTemp;
+    }
+  }), {
     add: function add() {
       if (this.status == 'add') {
         return true;
@@ -47214,7 +47299,7 @@ var render = function() {
                           staticClass: "btn btn-success btn-sm",
                           on: { click: _vm.clickViewBoard2 }
                         },
-                        [_vm._v("Modificar Archivo")]
+                        [_vm._v("Seleccionar Nuevo Archivo")]
                       ),
                       _vm._v(" "),
                       _c(
@@ -47363,10 +47448,6 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -47382,7 +47463,14 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     };
   },
 
-  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapState */])(['programado', 'ejecutado']), {
+  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["c" /* mapState */])({
+    programado: function programado(state) {
+      return state.avances.programado;
+    },
+    ejecutado: function ejecutado(state) {
+      return state.avances.ejecutado;
+    }
+  }), {
     colorIniciativa: function colorIniciativa() {
       return this.$store.getters.colorIniciativa;
     },
@@ -47585,6 +47673,28 @@ var render = function() {
                     ])
                   : _vm._e(),
                 _vm._v(" "),
+                _vm.status == "modify"
+                  ? _c("span", [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-success btn-sm",
+                          on: { click: _vm.clickModify }
+                        },
+                        [_vm._v("Modificar")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-success btn-sm",
+                          on: { click: _vm.clickPublish }
+                        },
+                        [_vm._v("Publicar")]
+                      )
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
                 _c("br"),
                 _vm._v(" "),
                 _c("div", [
@@ -47626,38 +47736,6 @@ var render = function() {
                         )
                       ])
                     ]),
-                _vm._v(" "),
-                _vm.status == "modify"
-                  ? _c("span", [
-                      _c(
-                        "button",
-                        {
-                          staticClass: "btn btn-success btn-sm",
-                          on: { click: _vm.clickModify }
-                        },
-                        [_vm._v("Modificar")]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "button",
-                        {
-                          staticClass: "btn btn-success btn-sm",
-                          on: { click: _vm.clickPublish }
-                        },
-                        [_vm._v("Publicar")]
-                      )
-                    ])
-                  : _vm._e(),
-                _vm._v(" "),
-                _vm.status == "published"
-                  ? _c("span", [
-                      _vm._v(
-                        "\n                Evidencia: " +
-                          _vm._s(_vm.avanceMes.warchivo) +
-                          "\n              "
-                      )
-                    ])
-                  : _vm._e(),
                 _vm._v(" "),
                 _vm.status == "viewModify"
                   ? _c("span", [_c("avance_board")], 1)
@@ -47781,13 +47859,23 @@ if (false) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__modules_avances_js__ = __webpack_require__(66);
+
 
 
 
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */]);
 
 var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
+  modules: { avances: __WEBPACK_IMPORTED_MODULE_2__modules_avances_js__["a" /* default */] }
+});
 
+/***/ }),
+/* 66 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony default export */ __webpack_exports__["a"] = ({
   state: {
     wmessage1: '',
     wmessage2: '',
@@ -47870,12 +47958,7 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
       state.rol = value;
     },
     status: function status(state, value) {
-      // let check0 = state.roles[state.rol];
       var check = state.roles[state.rol][value];
-      console.log('status roles: ', state.roles);
-      console.log('status value: ', value);
-      // console.log('status check0: ', check0);      
-      console.log('status check: ', check);
       if (check) {
         state.status = value;
       }
@@ -47915,8 +47998,6 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
     avanceMes: function avanceMes(state, value) {
       state.avanceMes = value;
     },
-
-    // swButton(state, value){ state.swButton = value; },
     mes: function mes(state, value) {
       state.mes = value;
     },
@@ -47934,17 +48015,17 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
     }
   },
   getters: {
-    colorIniciativa: function colorIniciativa(state) {
+    colorIniciativa: function colorIniciativa(state, getters) {
       var ejec = state.ejecutado.iniciativa;
       var prog = state.programado.iniciativa;
       return color(ejec, prog);
     },
-    colorObjetivo: function colorObjetivo(state) {
+    colorObjetivo: function colorObjetivo(state, getters) {
       var ejec = state.ejecutado.objetivo;
       var prog = state.programado.objetivo;
       return color(ejec, prog);
     },
-    colorPerspectiva: function colorPerspectiva(state) {
+    colorPerspectiva: function colorPerspectiva(state, getters) {
       var ejec = state.ejecutado.perspectiva;
       var prog = state.programado.perspectiva;
       return color(ejec, prog);
@@ -47952,8 +48033,6 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
   },
   actions: {
     SaveFileTemp: function SaveFileTemp(context, request) {
-      var _this = this;
-
       var data = new FormData();
       data.append('filePDF', request.filePDF);
       var url = context.state.protocol + '//' + context.state.URLdomain + '/api/avances/storeFileTemp';
@@ -47962,12 +48041,10 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
           'Content-Type': 'multipart/form-data'
         }
       }).then(function (response) {
-        console.log('SaveFileTemp response.data.archivo: ', response.data.archivo);
         var filepath = response.data.archivo;
         var filenameWithExtension = filepath.replace(/^.*[\\\/]/, '');
         var filename = '/storage/temporal/' + filenameWithExtension;
         context.commit('archivoTemp', context.state.protocol + '//' + context.state.URLdomain + filename);
-        console.log('SaveFileTemp this.archivoTemp: ', _this.archivoTemp);
         return true;
       }).catch(function (error) {
         console.log('SaveFileTemp: ', error);
@@ -48050,12 +48127,8 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
       }
     },
     GetData: function GetData(context, iniciativa_id) {
-      // var request = {
-      //   'iniciativa_id': iniciativa_id,
-      // };
       var url = context.state.protocol + '//' + context.state.URLdomain + '/api/avances/getData/' + iniciativa_id;
       axios.get(url).then(function (response) {
-        // console.log('GetData response:', response.data.data);
         context.commit('rol', response.data.data.rol);
         context.commit('avances', response.data.data.avances);
         context.commit('programacion', response.data.data.programacion);
@@ -48148,7 +48221,7 @@ function color(ejec, prog) {
 }
 
 /***/ }),
-/* 66 */
+/* 67 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
