@@ -3,11 +3,21 @@
 use App\Avance;
 use App\Environment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 
 
+
 Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::get('/avances', function () {
     return view('app.avances');
+});
+
+Route::get('/panel', function () {
+    return view('app.panel');
 });
 
 Route::get('/grid', function () {

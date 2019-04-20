@@ -12,7 +12,22 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::post('/', function (Request $request) {
+    dd($request);
+});
 
+/*
+	PANEL
+*/
+
+Route::get('panel/getData', [
+	'as'	=> 'panel.getData',
+	'uses'	=> 'Api\PanelController@getData'
+]);
+
+/*	
+	AVANCES
+*/
 Route::post('avances/storeFileTemp', [
 	'as'	=> 'avance.storeFileTemp',
 	'uses'	=> 'Api\AvanceController@storeFileTemp'

@@ -1,5 +1,6 @@
 export default {
   state: {
+    aaa: "avances.js",
     wmessage1: '',
     wmessage2: '',
     rol: '',
@@ -41,8 +42,8 @@ export default {
     },
     URLdomain: window.location.host,
     protocol: window.location.protocol,   
-    iniciativa_id: 0,
-    user_id: 0,
+    iniciativa_id: 1,
+    user_id: 1,
     avances: [],
     avanceMes: {},
     programacion: [],
@@ -82,6 +83,7 @@ export default {
       'Noviembre',
       'Diciembre',
     ],
+
 	},
 	mutations: {
     wmessage1(state, value){ state.wmessage1 = value; },
@@ -237,6 +239,7 @@ export default {
     GetData: (context, iniciativa_id) => {
       var url = context.state.protocol+'//'+context.state.URLdomain+'/api/avances/getData/'+iniciativa_id;
       axios.get(url).then(response=>{
+console.log('avances.GetData: ', response.data.data);
       	context.commit('rol', response.data.data.rol);
         context.commit('avances', response.data.data.avances);
         context.commit('programacion', response.data.data.programacion);
