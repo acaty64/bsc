@@ -18,6 +18,7 @@ class CreateAvancesTable extends Migration
             $table->integer('iniciativa_id');
             $table->integer('user_id');
             $table->decimal('ejecutado', 8, 2);
+            $table->integer('year');
             $table->integer('mes');
             $table->string('warchivo');
             $table->string('archivo');

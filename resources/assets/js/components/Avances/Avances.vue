@@ -3,7 +3,9 @@
     <div class="row">
       <div class="col-md-8 col-md-offset-2">    
         <div class="panel panel-default">
-          <div class="panel-heading">INICIATIVA: {{ iniciativa.winiciativa }}</div>
+          <div class="panel-heading">INICIATIVA: {{ iniciativa.winiciativa }}
+            <br>{{ subtitle }}
+          </div>
           <div class="container">
             <div class="col-md-7 box">
               <div class="panel-body">
@@ -87,39 +89,47 @@
   export default {
     created() {
       console.log('Avances Component mounted.');
+console.log('avances props: ', [this.user_id, this.iniciativa_id_, this.mm, this.yyyy]);
       this.setData();
       this.getData();
     },
-    props: ['user_id', 'iniciativa_id'],
+    props: ['user_id', 'iniciativa_id_', 'mm', 'yyyy'],
     computed: {
       ...mapState({
-            status: state => state.avances.status,
-            avances: state => state.avances.avances,
-            programacion: state => state.avances.programacion,
-            iniciativa: state => state.avances.iniciativa,
-            objetivo: state => state.avances.objetivo,
-            perspectiva: state => state.avances.perspectiva,
-            programado: state => state.avances.programado,
-            ejecutado: state => state.avances.ejecutado,
-            avanceMes: state => state.avances.avanceMes,
-            linea: state => state.avances.linea,
-            circulo1: state => state.avances.circulo1,
-            circulo2: state => state.avances.circulo2,
-            text1: state => state.avances.text1,
-            text2: state => state.avances.text2,
-            ini: state => state.avances.ini,
-            largo: state => state.avances.largo,
-            radio: state => state.avances.radio,
-            mes: state => state.avances.mes,
-            now: state => state.avances.now,
-            wmessage1: state => state.avances.wmessage1,
-            wmessage2: state => state.avances.wmessage2,
+          status: state => state.avances.status,
+          avances: state => state.avances.avances,
+          programacion: state => state.avances.programacion,
+          iniciativa: state => state.avances.iniciativa,
+          objetivo: state => state.avances.objetivo,
+          perspectiva: state => state.avances.perspectiva,
+          programado: state => state.avances.programado,
+          ejecutado: state => state.avances.ejecutado,
+          avanceMes: state => state.avances.avanceMes,
+          linea: state => state.avances.linea,
+          circulo1: state => state.avances.circulo1,
+          circulo2: state => state.avances.circulo2,
+          text1: state => state.avances.text1,
+          text2: state => state.avances.text2,
+          ini: state => state.avances.ini,
+          largo: state => state.avances.largo,
+          radio: state => state.avances.radio,
+          mes: state => state.avances.mes,
+          now: state => state.avances.now,
+          year: state => state.avances.year,
+          wmessage1: state => state.avances.wmessage1,
+          wmessage2: state => state.avances.wmessage2,
         }),
       ...mapGetters({
+            // now: 'now',
+            // year: 'year',
             colorIniciativa: 'colorIniciativa', 
             colorObjetivo: 'colorObjetivo', 
-            colorPerspectiva: 'colorPerspectiva'    
+            colorPerspectiva: 'colorPerspectiva',
+            wmes: 'wmes',
           }),
+      subtitle(){
+        return "Mes: "+this.wmes+" Año: "+this.year;
+      },
       wstatus(){
         switch(this.status) {
           case 'view': return "VISUALIZACIÓN "+this.wmessage1+"-"+this.wmessage2; break;
@@ -134,6 +144,19 @@
     },
     components: {
       semaforoComponent, avance_board, drawComponent
+    },
+    watch: {
+      mm: function () {
+        this.$store.commit('now', this.mm);
+        this.getData();
+      },
+      yyyy: function () {
+        this.$store.commit('year', this.yyyy);
+        this.getData();
+      },
+      iniciativa_id_: function () {
+        this.getData();
+      },
     },
     methods: {
       clickChecked: function () {
@@ -160,12 +183,16 @@
       clickModify: function(){
         this.$store.dispatch('ClickButton', 'viewModify');
       },
-      setData() {
-        this.$store.commit('user_id', this.user_id);
-        this.$store.commit('iniciativa_id', this.iniciativa_id);
+      async setData() {
+console.log('setData datos: ', [this.user_id, this.iniciativa_id_, this.mm, this.yyyy]);
+        await this.$store.commit('user_id', this.user_id);
+        await this.$store.commit('iniciativaid', this.iniciativa_id_);
+        await this.$store.commit('now', this.mm);
+        await this.$store.commit('year', this.yyyy);
       },
-      getData(){
-        this.$store.dispatch('GetData', this.iniciativa_id);
+      async getData(){
+console.log('getData datos: ', [this.iniciativa_id_, this.mm, this.yyyy]);
+        await this.$store.dispatch('GetData', [this.iniciativa_id_, this.mm, this.yyyy]);
       },
     },
   };

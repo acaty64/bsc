@@ -8,6 +8,10 @@ use Illuminate\Support\Facades\Storage;
 
 
 
+Route::get('/example', function () {
+    return view('example');
+});
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -22,10 +26,6 @@ Route::get('/panel', function () {
 
 Route::get('/grid', function () {
     return view('grid');
-});
-
-Route::get('/example', function () {
-    return view('example');
 });
 
 // Ruta para carga de archivos PDF

@@ -25,6 +25,7 @@ class IniciativaController extends Controller
             'inductor' => $request->inductor,
             'indicador' => $request->indicador,
             'meta' => $request->meta,
+            'year' => $request->year,
             'incidencia' => $request->incidencia,
             'objetivo_id' => $request->objetivo_id
         ]);
@@ -49,6 +50,7 @@ class IniciativaController extends Controller
         $user->inductor = $request->inductor;
         $user->indicador = $request->indicador;
         $user->meta = $request->meta;
+        $user->year = $request->year;
         $user->incidencia = $request->incidencia;
         $user->objetivo_id = $request->objetivo_id;
 

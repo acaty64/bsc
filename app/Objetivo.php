@@ -13,6 +13,7 @@ class Objetivo extends Model
     protected $fillable = [	
     	'wobjetivo',
     	'perspectiva_id',
+        'year',
     	'incidencia'
     ];
 
@@ -26,22 +27,22 @@ class Objetivo extends Model
         return Objetivo::where('perspectiva_id', $this->perspectiva_id)->get();
     }
 
-    public function avance()
+    public function avance($month, $year)
     {
-        $iniciativas = Iniciativa::where('objetivo_id', $this->id)->get();
+        $iniciativas = Iniciativa::where('objetivo_id', $this->id)->where('year',$year)->get();
         $avance = 0;
         foreach ($iniciativas as $iniciativa) {
-            $avance = $avance + ($iniciativa->avance()*($iniciativa->incidencia/100)); 
+            $avance = $avance + ($iniciativa->avance($month, $year)*($iniciativa->incidencia/100)); 
         }
         return $avance;
     }
 
-    public function programado()
+    public function programado($month, $year)
     {
-        $iniciativas = Iniciativa::where('objetivo_id', $this->id)->get();
+        $iniciativas = Iniciativa::where('objetivo_id', $this->id)->where('year', $year)->get();
         $programado = 0;
         foreach ($iniciativas as $iniciativa) {
-            $programado = $programado + ($iniciativa->programado()*($iniciativa->incidencia/100)); 
+            $programado = $programado + ($iniciativa->programado($month, $year)*($iniciativa->incidencia/100)); 
         }
         return $programado;
     }

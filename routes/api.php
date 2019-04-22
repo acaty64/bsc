@@ -17,6 +17,14 @@ Route::post('/', function (Request $request) {
 });
 
 /*
+	INDEX
+*/
+
+Route::get('index/getDataIndex', [
+	'as'	=> 'index.getDataIndex',
+	'uses'	=> 'Api\IndexController@getDataIndex'
+]);
+/*
 	PANEL
 */
 
@@ -48,7 +56,7 @@ Route::post('avances/update', [
 	'uses'	=> 'Api\AvanceController@update'
 ]);
 
-Route::get('avances/getData/{id}', [
+Route::get('avances/getData/{id}/{mes}/{year}', [
 	'as'	=> 'avance.getData',
 	'uses'	=> 'Api\AvanceController@getData'
 ]);

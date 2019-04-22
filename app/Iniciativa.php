@@ -16,6 +16,7 @@ class Iniciativa extends Model
     	'inductor',
     	'indicador',
     	'meta',
+        'year',
     	'incidencia',
     	'objetivo_id'
     ];
@@ -30,19 +31,22 @@ class Iniciativa extends Model
     	return Iniciativa::where('objetivo_id', $this->objetivo_id)->get();
     }
 
-    public function avance()
+    public function avance($month, $year)
     {
-        $avances = Avance::where('iniciativa_id', $this->id)->get();
+        $avances = Avance::where('iniciativa_id', $this->id)->where('year', $year)->where('mes', '<=', $month)->get();
         $nAvance = 0;
         foreach ($avances as $avance) {
-            $nAvance = $nAvance + (($avance->ejecutado / $this->meta) * 100);
+            if($avance->year == $year){
+                $nAvance = $nAvance + (($avance->ejecutado / $this->meta) * 100);
+            }
         }
         return $nAvance;
     }
 
-    public function programado()
+    public function programado($month, $year)
     {
-        $programado = Programacion::where('iniciativa_id', $this->id)->where('mes', '<=', date("m"))->get();
+        $programado = Programacion::where('iniciativa_id', $this->id)->where('year', $year)->where('mes', '<=', $month)->get();
+        // $programado = Programacion::where('iniciativa_id', $this->id)->where('mes', '<=', date("m"))->get();
         $nProgramado = 0;
         foreach ($programado as $programa) {
             $nProgramado = $nProgramado + (($programa->programado / $this->meta) * 100);

@@ -21,6 +21,7 @@ class A05AvancesTest extends TestCase
                 'iniciativa_id' => 1,
                 'ejecutado' => 2,
                 'mes'     => 3,
+                'year'  => 2019,
                 'warchivo'     => 'prueba.pdf',
                 'archivo'     => 'avances/aewviandaewfvaivnfajweionv.pdf',
             ];
@@ -40,6 +41,7 @@ class A05AvancesTest extends TestCase
 		      	'user_id' => 1,
 		      	'ejecutado'     => 3,
 		      	// 'mes'     => 5,
+                'year'  => 2019,
                 'archivo'     => 'avances/xxaewviandaewfvaivnfajweionv.pdf',
                 'warchivo'     => 'prueba.pdf',
 		    ];    	

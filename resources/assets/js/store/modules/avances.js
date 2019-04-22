@@ -43,6 +43,7 @@ export default {
     URLdomain: window.location.host,
     protocol: window.location.protocol,   
     iniciativa_id: 1,
+    // iniciativaid: 1,
     user_id: 1,
     avances: [],
     avanceMes: {},
@@ -58,18 +59,24 @@ export default {
         ejecutado: 0,
         programado: 0
       },
-    now: new Date().getMonth() + 1,
+    // now: new Date().getMonth() + 1,
+    now: 0,
+    year: 0,
+    mm: 0,
+    yyyy: 0,
 		avanceDefault: {
         id: 0,
 				user_id: 0,
 				iniciativa_id: 0,
 				ejecutado: 0,
-				mes: new Date().getMonth() + 1,
+				// mes: new Date().getMonth() + 1,
+        mes: 0,
+        year: 0,
 				warchivo: "",
 				archivo: "",
         published: false,
 			},
-    wmes: [
+    wmeses: [
       'Enero',
       'Febrero',
       'Marzo',
@@ -99,9 +106,30 @@ export default {
       state.user_id = id; 
       state.avanceDefault.user_id = id;
     },
-    iniciativa_id(state, id){ 
+    iniciativaid(state, id){ 
       state.iniciativa_id = id;
+      state.iniciativa_id_ = id;
       state.avanceDefault.iniciativa_id = id; 
+    },
+    mm(state, value){
+      state.now = value;
+      state.mm = value;
+      state.avanceDefault.mes = value;
+console.log('mes_actual', value);
+      this.dispatch('GetData', [state.iniciativa_id, value, state.year]);
+      // this.dispatch('GetData', [this.iniciativa_id, this.mes_actual, this.year]);
+      // context.dispatch('GetData', [context.state.iniciativa_id, context.state.now, context.state.year]);
+    },
+    now (state, value) { state.now = value},
+    year (state, value) { state.year = value},
+    yyyy(state, value){
+console.log('year_actual', value);
+      state.year = value;
+      state.yyyy = value;
+      state.avanceDefault.year = value;
+      this.dispatch('GetData', [state.iniciativa_id, state.now, value]);
+      // this.dispatch('GetData', [this.iniciativa_id, this.mes_actual, this.year]);
+      // context.dispatch('GetData', [context.state.iniciativa_id, context.state.now, context.state.year]);
     },
     avances(state, value){ state.avances = value; },
 		programacion(state, value){ state.programacion = value; },
@@ -119,6 +147,18 @@ export default {
     archivoTemp(state, value){ state.archivoTemp = value; },
 	},
 	getters: {
+    // now (state){
+    //   return state.now;
+    // },
+    // year (state){
+    //   return state.year;
+    // },
+    wmes (state, getters){
+      if(state.now){
+        return state.wmeses[state.now-1];
+      }
+      return '';
+    },
     colorIniciativa (state, getters) {
       var ejec = state.ejecutado.iniciativa;
       var prog = state.programado.iniciativa;
@@ -179,8 +219,10 @@ export default {
         context.commit('archivo', response.data.archivo);
         var request = context.state.avanceMes;
         let url = context.state.protocol+'//'+context.state.URLdomain+'/api/avances/store';
+console.log('SaveData url: ', url);
         axios.post(url, request).then(response=>{
-          context.dispatch('GetData', context.state.iniciativa_id);
+console.log('SaveData response.data: ', response.data);
+          context.dispatch('GetData', [context.state.iniciativa_id, context.state.now, context.state.year]);
           return true;
         }).catch(function(error){
           console.log('SaveData 2 error: ', error);
@@ -236,10 +278,11 @@ export default {
         context.commit('mes', newMes);
       }
     },
-    GetData: (context, iniciativa_id) => {
-      var url = context.state.protocol+'//'+context.state.URLdomain+'/api/avances/getData/'+iniciativa_id;
+    GetData: (context, [iniciativa_id, now, year]) => {
+      var url = context.state.protocol+'//'+context.state.URLdomain+'/api/avances/getData/'+iniciativa_id+"/"+now+"/"+year;
+console.log('avances.GetData url: ', url);
       axios.get(url).then(response=>{
-console.log('avances.GetData: ', response.data.data);
+// console.log('avances.GetData: ', response.data.data);
       	context.commit('rol', response.data.data.rol);
         context.commit('avances', response.data.data.avances);
         context.commit('programacion', response.data.data.programacion);

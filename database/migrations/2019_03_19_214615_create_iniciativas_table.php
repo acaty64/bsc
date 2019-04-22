@@ -18,6 +18,7 @@ class CreateIniciativasTable extends Migration
             $table->string('winiciativa');
             $table->string('inductor');
             $table->string('indicador');
+            $table->integer('year');
             $table->integer('meta');
             $table->integer('incidencia');
             $table->integer('objetivo_id');

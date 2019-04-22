@@ -18,6 +18,7 @@ class A03ObjetivosTest extends TestCase
         $request = [
         	'wobjetivo' => 'Objetivo de prueba',
         	'incidencia' => 100,
+            'year' => 2019,
         	'perspectiva_id' => 1
         ];
 
@@ -33,6 +34,7 @@ class A03ObjetivosTest extends TestCase
         	'id' => $objetivo_id,
         	'wobjetivo' => 'Nuevo Objetivo',
         	'incidencia' => 50,
+            'year' => 2019,
         	'perspectiva_id' => 1
         ];
 

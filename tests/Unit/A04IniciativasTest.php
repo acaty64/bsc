@@ -20,6 +20,7 @@ class A04IniciativasTest extends TestCase
             'inductor' => 'informes',
             'indicador' => 'informe(s)',
             'meta' => 2,
+            'year' => 2019,
             'incidencia' => 50,
             'objetivo_id' => 2
         ];
@@ -38,6 +39,7 @@ class A04IniciativasTest extends TestCase
             'inductor' => 'informes',
             'indicador' => 'informe(s)',
             'meta' => 5,
+            'year' => 2019,
             'incidencia' => 100,
             'objetivo_id' => 2
         ];

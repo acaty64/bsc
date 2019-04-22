@@ -12,22 +12,22 @@ class Perspectiva extends Model
     	'wperspectiva'
     ];
 
-    public function avance()
+    public function avance($month, $year)
     {
         $objetivos = Objetivo::where('perspectiva_id', $this->id)->get();
         $avance = 0;
         foreach ($objetivos as $objetivo) {
-            $avance = $avance + ($objetivo->avance()*($objetivo->incidencia/100)); 
+            $avance = $avance + ($objetivo->avance($month, $year)*($objetivo->incidencia/100)); 
         }
         return $avance; 
     }
 
-    public function programado()
+    public function programado($month, $year)
     {
-        $objetivos = Objetivo::where('perspectiva_id', $this->id)->get();
+        $objetivos = Objetivo::where('perspectiva_id', $this->id)->where('year', $year)->get();
         $programado = 0;
         foreach ($objetivos as $objetivo) {
-            $programado = $programado + ($objetivo->programado()*($objetivo->incidencia/100)); 
+            $programado = $programado + ($objetivo->programado($month, $year)*($objetivo->incidencia/100)); 
         }
         return $programado;	
     }

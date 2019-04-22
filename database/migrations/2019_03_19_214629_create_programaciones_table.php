@@ -17,6 +17,7 @@ class CreateProgramacionesTable extends Migration
             $table->increments('id');            
             $table->integer('iniciativa_id');
             $table->float('programado', 8, 2);
+            $table->integer('year');
             $table->integer('mes');
             $table->timestamps();
         });

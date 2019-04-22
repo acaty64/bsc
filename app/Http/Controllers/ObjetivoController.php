@@ -38,8 +38,10 @@ class ObjetivoController extends Controller
         $objetivo = Objetivo::create([
             'wobjetivo' => $request->wobjetivo,
             'incidencia' => $request->incidencia,
+            'year' => $request->year,
             'perspectiva_id' => $request->perspectiva_id         
         ]);
+
         return ['success' => true, 'objetivo_id' => $objetivo->id];
     }
 
@@ -77,6 +79,7 @@ class ObjetivoController extends Controller
         $objetivo = Objetivo::findOrFail($request->id);
         $objetivo->wobjetivo = $request->wobjetivo;
         $objetivo->incidencia = $request->incidencia;
+        $objetivo->year = $request->year;
         $objetivo->perspectiva_id = $request->perspectiva_id;
 
         $objetivo->save();

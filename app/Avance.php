@@ -13,6 +13,7 @@ class Avance extends Model
     	'iniciativa_id',
     	'ejecutado',
     	'mes',
+        'year',
     	'warchivo',
         'archivo',
         'published'

@@ -9,7 +9,7 @@
 <script>
     export default {
         mounted() {
-            console.log('Semaforo Component mounted.');
+            // console.log('Semaforo Component mounted.');
         },
         props: ['color'],
         data(){

@@ -11,6 +11,7 @@ class Programacion extends Model
     protected $fillable = [	
     	'programado',
     	'mes',
+        'year',
     	'iniciativa_id'
     ];
 

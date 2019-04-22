@@ -16,6 +16,7 @@ class CreateObjetivosTable extends Migration
         Schema::create('objetivos', function (Blueprint $table) {
             $table->increments('id');
             $table->string('wobjetivo');
+            $table->integer('year');
             $table->integer('incidencia');
             $table->integer('perspectiva_id');
             $table->timestamps();

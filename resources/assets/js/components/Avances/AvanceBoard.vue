@@ -42,7 +42,7 @@
   </div>
 </template>
 <script>
-  import {mapState} from 'vuex';
+  import {mapState, mapGetters} from 'vuex';
   export default {
     created() {
       console.log('AvanceBoard Component mounted.');
@@ -51,7 +51,6 @@
 
     computed: {
       ...mapState({
-          wmes: state => state.avances.wmes,
           now: state => state.avances.now,
           user_id: state => state.avances.user_id,
           iniciativa: state => state.avances.iniciativa,
@@ -61,6 +60,9 @@
           URLdomain: state => state.avances.URLdomain,
           status: state => state.avances.status,
           archivoTemp: state => state.avances.archivoTemp
+      }),
+      ...mapGetters({
+        wmes: 'wmes',
       }),
       add(){
         if(this.status == 'add'){
@@ -89,8 +91,8 @@
       },
       labelTitle(){
         return (this.avanceMes.id == 0) 
-          ? "Agregar avance del mes de " + this.wmes[this.now-1] 
-          : "Modificar avance del mes de " + this.wmes[this.now-1] ;
+          ? "Agregar avance del mes de " + this.wmes 
+          : "Modificar avance del mes de " + this.wmes ;
       },
     },
 

@@ -17,6 +17,7 @@ class IniciativasTableSeeder extends Seeder
                     'inductor' => 'Informe de Monitoreo',
                     'indicador' => 'Informe(s)',
                     'meta' => 2,
+                    'year' => 2019,
                     'incidencia' => 100,
                     'objetivo_id' => 1, 
                 ]);
@@ -25,6 +26,7 @@ class IniciativasTableSeeder extends Seeder
                     'inductor' => 'Presencia en centros educativos e institutos tecnológicos.',
                     'indicador' => 'Visitas',
                     'meta' => 10,
+                    'year' => 2019,
                     'incidencia' => 100 ,
                     'objetivo_id' => 2, 
                 ]);
@@ -33,6 +35,7 @@ class IniciativasTableSeeder extends Seeder
                     'inductor' => 'Revisión Trimestral',
                     'indicador' => 'Revisiones',
                     'meta' => 4,
+                    'year' => 2019,
                     'incidencia' => 100 ,
                     'objetivo_id' => 3, 
                 ]);
@@ -41,6 +44,7 @@ class IniciativasTableSeeder extends Seeder
                     'inductor' => 'Alumnos atendidos',
                     'indicador' => '% ingresantes LIM',
                     'meta' => 25,
+                    'year' => 2019,
                     'incidencia' => 100 ,
                     'objetivo_id' => 4, 
                 ]);
@@ -49,6 +53,7 @@ class IniciativasTableSeeder extends Seeder
                     'inductor' => 'Personal administrativo capacitado.',
                     'indicador' => '% personal adm. LIM',
                     'meta' => 100,
+                    'year' => 2019,
                     'incidencia' => 100 ,
                     'objetivo_id' => 5, 
                 ]);
@@ -57,6 +62,7 @@ class IniciativasTableSeeder extends Seeder
                     'inductor' => 'Cursos de Formación Continua.',
                     'indicador' => 'cursos',
                     'meta' => 60,
+                    'year' => 2019,
                     'incidencia' => 100,
                     'objetivo_id' => 6, 
                 ]);
@@ -65,6 +71,7 @@ class IniciativasTableSeeder extends Seeder
                     'inductor' => 'Docentes nombrados con Grado de Maestro',
                     'indicador' => '% docentes nombrados',
                     'meta' => 100,
+                    'year' => 2019,
                     'incidencia' => 50 ,
                     'objetivo_id' => 7, 
                 ]);
@@ -73,6 +80,7 @@ class IniciativasTableSeeder extends Seeder
                     'inductor' => 'Artículos científicos',
                     'indicador' => 'artículos',
                     'meta' => 5,
+                    'year' => 2019,
                     'incidencia' => 50 ,
                     'objetivo_id' => 7, 
                 ]);
@@ -81,6 +89,7 @@ class IniciativasTableSeeder extends Seeder
                     'inductor' => 'Docentes capacitados',
                     'indicador' => '% docentes',
                     'meta' => 50,
+                    'year' => 2019,
                     'incidencia' => 100 ,
                     'objetivo_id' => 8, 
                 ]);
